@@ -1,0 +1,53 @@
+# 📊 4.End-to-End Smart Sales Analysis & Forecasting System for E-Commerce
+# Stack: Python, Pandas, SQL, ML, ANN/LSTM, Power BI, Streamlit, GitHub, Docker.
+
+## 🧠 About the Project
+The project's goal is to create an intelligent sales analysis and forecasting system for an e-commerce platform that allows for the analysis of customer data, product ratings, and sales trends. The system provides a user interface for prediction, customer classification, and sentiment analysis based on transaction data and reviews.
+
+## 📁 Dataset
+Dataset taken from Kaggle -> https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+
+This is a Brazilian ecommerce public dataset of orders made at Olist Store. The dataset has information of 100k orders from 2016 to 2018 made at multiple marketplaces in Brazil. Its features allows viewing an order from multiple dimensions: from order status, price, payment and freight performance to customer location, product attributes and finally reviews written by customers. We also released a geolocation dataset that relates Brazilian zip codes to lat/lng coordinates.
+
+This is real commercial data, it has been anonymised, and references to the companies and partners in the review text have been replaced with the names of Game of Thrones great houses.
+
+# Context of Dataset
+This dataset was generously provided by Olist, the largest department store in Brazilian marketplaces. Olist connects small businesses from all over Brazil to channels without hassle and with a single contract. Those merchants are able to sell their products through the Olist Store and ship them directly to the customers using Olist logistics partners. See more on our website: www.olist.com
+
+After a customer purchases the product from Olist Store a seller gets notified to fulfill that order. Once the customer receives the product, or the estimated delivery date is due, the customer gets a satisfaction survey by email where he can give a note for the purchase experience and write down some comments.
+
+Data Schema avaible in artifacts/images folder as data_schema.png.
+
+## ⚙️ Technologies Used
+- Python 3.10
+- Jupyter Notebook
+- VS Code
+- Pandas
+- Matplotlib
+- Seaborn
+- scikit-learn
+- 
+
+## 🔧 Installation:
+pip install -r requirements.txt
+
+## 🔧 Run by:
+python main.py
+
+## 🧪 Steps Performed
+1. **Data Cleaning**
+   - 
+2. **Feature Engineering**
+   - 
+3. **Exploratory Data Analysis**
+   - 
+4. **Models building, feature selection/extraction, hyperparameter tuning, training and metrics**
+   - Selected Models:
+      + 
+5. **Simple imput prediction for selected model from file**
+
+### Step-by-step analysis with notes and summaries is available in 'notebook' folder.
+
+🧑‍💼 Author: Krzysztof Kopytowski
+📎 LinkedIn: https://www.linkedin.com/in/krzysztof-kopytowski-74964516a/
+📎 GitHub: https://github.com/KrzysztofDK
