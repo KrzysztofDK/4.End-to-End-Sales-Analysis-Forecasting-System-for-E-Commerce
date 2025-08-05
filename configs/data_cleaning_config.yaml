@@ -1,0 +1,36 @@
+customers: {}
+
+geolocation:
+  convert_columns:
+    geolocation_lat: float
+    geolocation_lng: float
+  rename_columns:
+    order_item_id: ordered_items
+
+order_items:
+  convert_columns:
+    price: float
+    freight_value: float
+  rename_columns:
+    freight_value: freight_cost
+
+order_payments:
+  convert_columns:
+    payment_value: float
+  rename_columns:
+    payment_sequential: payment_methods
+
+order_reviews: {}
+
+orders:
+  dropna_columns:
+    - order_delivered_carrier_date
+    - order_delivered_customer_date
+
+products:
+  dropna_columns:
+    - product_category_name
+    - product_name_lenght
+    - product_photos_qty
+
+sellers: {}

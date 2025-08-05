@@ -53,7 +53,7 @@ class DataIngestion:
         """Function to initiate data ingest.
 
         Raises:
-            CustomException: Exception during files ingesting.
+            CustomException
 
         Returns:
             dict: Dictionary of ingested data as pd.DataFrame.
