@@ -22,8 +22,8 @@ def main():
 
     for name, df in raw_datasets_dict.items():
         config = cleaning_configs.get(name, {})
-        cleaning = DataCleaning(df, cleaning_config=config)
-        cleaned_dataframes[name] = cleaning.run_all_cleaning_functions()
+        cleaning = DataCleaning(df=df, filename=name, cleaning_config=config)
+        cleaned_dataframes[name] = cleaning.run_all_cleaning_functions_and_save()
 
     logging.info("Main program ended.")
 

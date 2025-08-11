@@ -1,6 +1,7 @@
 """Module to clean data after basic EDA in Power BI"""
 
 import sys
+import os
 from typing import Type
 
 import pandas as pd
@@ -12,9 +13,10 @@ from src.logger import logging
 class DataCleaning:
     """Class to clean data by converting column types, column renaming, row deleting, handling duplicates."""
 
-    def __init__(self, df: pd.DataFrame, cleaning_config: dict = None):
+    def __init__(self, df: pd.DataFrame, filename: str, cleaning_config: dict = None):
         self.original_df = df.copy()
         self.df = df
+        self.filename = filename
         self.config = cleaning_config or {}
 
     def convert_column_type(self, columns: list[str], to_type: Type) -> None:
@@ -80,12 +82,19 @@ class DataCleaning:
         """Function to drop duplicated rows."""
 
         logging.info("Function to drop duplicates has started.")
-        before = len(self.df)
-        self.df.drop_duplicates(inplace=True)
-        after = len(self.df)
-        logging.info(f"Dropped {before - after} duplicated rows.")
 
-    def run_all_cleaning_functions(self) -> pd.DataFrame:
+        if self.filename == "geolocation":
+            self.df.drop_duplicates(
+                subset=["geolocation_zip_code_prefix"], inplace=True
+            )
+            logging.info("Function to drop duplicates detected geolocation file.")
+        else:
+            before = len(self.df)
+            self.df.drop_duplicates(inplace=True)
+            after = len(self.df)
+            logging.info(f"Dropped {before - after} duplicated rows.")
+
+    def run_all_cleaning_functions_and_save(self) -> pd.DataFrame:
         """Function to run all cleaning functions.
 
         Returns:
@@ -114,5 +123,10 @@ class DataCleaning:
         if rename_map:
             self.rename_columns(rename_map)
 
-        logging.info("Function to run all cleaning functions has ended.")
+        cleaned_df_path = os.path.join(
+            "artifacts", "cleaned_data", f"{self.filename}.csv"
+        )
+        self.df.to_csv(cleaned_df_path, index=False, sep=";", decimal=",")
+        logging.info(f"Cleaned DataFrame saved to {cleaned_df_path}")
+
         return self.df

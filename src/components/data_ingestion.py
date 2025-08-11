@@ -38,9 +38,6 @@ class DataIngestionConfig:
     sellers_data_path: str = os.path.join(
         "artifacts", "raw_data", "olist_sellers_raw.csv"
     )
-    category_translation_data_path: str = os.path.join(
-        "artifacts", "raw_data", "product_category_name_translation_raw.csv"
-    )
 
 
 class DataIngestion:

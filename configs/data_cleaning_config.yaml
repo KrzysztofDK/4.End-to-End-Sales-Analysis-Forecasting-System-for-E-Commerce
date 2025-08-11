@@ -4,8 +4,6 @@ geolocation:
   convert_columns:
     geolocation_lat: float
     geolocation_lng: float
-  rename_columns:
-    order_item_id: ordered_items
 
 order_items:
   convert_columns:
@@ -13,6 +11,7 @@ order_items:
     freight_value: float
   rename_columns:
     freight_value: freight_cost
+    order_item_id: items_ordered
 
 order_payments:
   convert_columns:
