@@ -18,15 +18,17 @@ After a customer purchases the product from Olist Store a seller gets notified t
 
 Data Schema avaible in artifacts/images folder as data_schema.png.
 
-## ⚙️ Technologies Used
+## ⚙️ Technologies Used (in progress)
 - Python 3.10
 - Jupyter Notebook
 - VS Code
 - Pandas
+- Numpy
 - Matplotlib
 - Seaborn
 - scikit-learn
-- 
+- Streamlit
+- pyyaml
 
 ## 🔧 Installation:
 pip install -r requirements.txt
@@ -34,17 +36,24 @@ pip install -r requirements.txt
 ## 🔧 Run by:
 python main.py
 
-## 🧪 Steps Performed
-1. **Data Cleaning**
-   - 
-2. **Feature Engineering**
-   - 
-3. **Exploratory Data Analysis**
-   - 
-4. **Models building, feature selection/extraction, hyperparameter tuning, training and metrics**
-   - Selected Models:
-      + 
-5. **Simple imput prediction for selected model from file**
+## 🧪 Steps Performed (in progress)
+1. **Exploratory Data Analysis**
+   
+2. **Data Cleaning**
+   
+3. **Feature Engineering**
+   
+4. **Preparing data for the dashboard using SQL**
+   
+5. **Preparing a dashboard using Power BI**
+
+6. **Customer classification (ANN Keras)**
+
+7. **Sentiment analysis (BERT)**
+
+8. **Sale forecasting (LSTM Keras)**
+
+9. **Streamlit: A Simple Prediction App**
 
 ### Step-by-step analysis with notes and summaries is available in 'notebook' folder.
 
