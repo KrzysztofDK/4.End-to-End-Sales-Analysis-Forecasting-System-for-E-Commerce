@@ -45,7 +45,7 @@ python main.py
    
 3. **Preparing data for the dashboard using SQL**
    
-4. **Preparing a dashboard using Power BI**
+4. **Preparing a dashboard using Power BI (Star Schema)**
 
 5. **Customer classification (ANN Keras)**
 
