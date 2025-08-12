@@ -22,6 +22,8 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - Python 3.10
 - Jupyter Notebook
 - VS Code
+- SQL
+- Power BI
 - Pandas
 - Numpy
 - Matplotlib
@@ -41,21 +43,17 @@ python main.py
    
 2. **Data Cleaning**
    
-3. **Feature Engineering**
+3. **Preparing data for the dashboard using SQL**
    
-4. **Preparing data for the dashboard using SQL**
-   
-5. **Preparing a dashboard using Power BI**
+4. **Preparing a dashboard using Power BI**
 
-6. **Customer classification (ANN Keras)**
+5. **Customer classification (ANN Keras)**
 
-7. **Sentiment analysis (BERT)**
+6. **Sentiment analysis (BERT)**
 
-8. **Sale forecasting (LSTM Keras)**
+7. **Sale forecasting (LSTM Keras)**
 
-9. **Streamlit: A Simple Prediction App**
-
-### Step-by-step analysis with notes and summaries is available in 'notebook' folder.
+8. **Streamlit: A Simple Prediction App**
 
 🧑‍💼 Author: Krzysztof Kopytowski
 📎 LinkedIn: https://www.linkedin.com/in/krzysztof-kopytowski-74964516a/
