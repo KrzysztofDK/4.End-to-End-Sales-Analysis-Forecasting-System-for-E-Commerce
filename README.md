@@ -40,12 +40,16 @@ python main.py
 
 ## 🧪 Steps Performed (in progress)
 1. **Exploratory Data Analysis**
+- avaible in the notebook/EDA.ipynb file
    
 2. **Data Cleaning**
+- parameters for cleaning avaible in the configs/data_cleaning_config.yaml file
    
 3. **Preparing data for the dashboard using SQL**
+- avaible in the SQL location
    
 4. **Preparing a dashboard using Power BI (Star Schema)**
+- avaible in the reports/dashboard.pbix file
 
 5. **Customer classification (ANN Keras)**
 

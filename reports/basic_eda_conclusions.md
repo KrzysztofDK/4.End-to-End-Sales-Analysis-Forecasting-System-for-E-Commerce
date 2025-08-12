@@ -6,36 +6,27 @@
 - Number of records: ~100,000.
 
 ## 2. Data Issues
-- Lack of relationships between files,
 - Columns:
   * `geolocation_lat`, `geolocation_lng` in olist_geolocation.csv,
-  * `price`, `freight_value` in olist_order_items.csv,
+  * `price`, `freight_value`, `shipping_limit_date` in olist_order_items.csv,
   * `payment_value` in olist_order_payments.csv,
-  contain numerical values, but were wrote as text.
+  * `review_creation_date`, `review_answer_timestamp` in olist_order_reviews.csv,
+  * `order_purchase_timestamp`, `order_approved_at`, `order_delivered_carrier_date`,
+  `order_delivered_customer_date`, `order_estimated_delivery_date` in olist_orders.csv,
+  contain numerical values or dates, but were wrote as text.
 
 - Columns names:
-  * `order_item_id` in olist_geolocation.csv,
-  * `freight_value` in olist_order_items.csv,
+  * `order_item_id`, `freight_value` in olist_order_items.csv,
   * `payment_sequential` in olist_order_payments.csv,
-  need conversion to more intelligible.
+  need name conversion to more intelligible.
 
 - Missing values occure in:
    * olist_orders.csv (below 3% of all data),
    * olist_products.csv (12% totaly in four columns).
+   * olist_order_reviews.csv (below 3% of all data).
 
 - Duplicate values do not occure.
 
-## 3. Data Relationships (Power BI)
-- Key relationships:  
-  - `orders` 1 --- * `order_reviews`
-  - `orders` 1 --- * `order_payments`
-  - `orders` 1 --- * `order_customer`
-  - `orders` 1 --- * `order_items`
-  - `order_items` * --- 1 `products`
-  - `order_items` * --- 1 `sellers`
-  - `geolocation` * --- * `order_customer`
-  - `geolocation` * --- * `sellers`
-
-## 4. Conclusions
+## 3. Conclusions
 - The dataset requires preprocessing (data type fixes and columns names fixes),
 - EDA should be performed after resolving the data quality issues.
