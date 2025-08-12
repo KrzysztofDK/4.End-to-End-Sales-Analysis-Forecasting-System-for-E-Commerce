@@ -9,6 +9,7 @@ order_items:
   convert_columns:
     price: float
     freight_value: float
+    shipping_limit_date: datetime
   rename_columns:
     freight_value: freight_cost
     order_item_id: items_ordered
@@ -19,9 +20,23 @@ order_payments:
   rename_columns:
     payment_sequential: payment_methods
 
-order_reviews: {}
+order_reviews:
+  convert_columns:
+    review_creation_date: datetime
+    review_answer_timestamp: datetime
+  dropna_columns:
+    - review_id
+    - review_score
+    - review_creation_date
+    - review_answer_timestamp
 
 orders:
+  convert_columns:
+    order_purchase_timestamp: datetime
+    order_approved_at: datetime
+    order_delivered_carrier_date: datetime
+    order_delivered_customer_date: datetime
+    order_estimated_delivery_date: datetime
   dropna_columns:
     - order_delivered_carrier_date
     - order_delivered_customer_date
@@ -30,6 +45,7 @@ products:
   dropna_columns:
     - product_category_name
     - product_name_lenght
+    - product_description_lenght
     - product_photos_qty
 
 sellers: {}

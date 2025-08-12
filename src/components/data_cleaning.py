@@ -39,7 +39,13 @@ class DataCleaning:
                 logging.info(
                     "Function to convert column types in DataCleaning class has started."
                 )
-                self.df[column] = self.df[column].astype(to_type)
+                if to_type == "datetime" or to_type == pd.Timestamp:
+                    self.df[column] = pd.to_datetime(
+                        self.df[column], errors="coerce", format="%Y-%m-%d %H:%M:%S"
+                    )
+
+                else:
+                    self.df[column] = self.df[column].astype(to_type)
 
             except Exception as e:
                 logging.info(
@@ -109,7 +115,13 @@ class DataCleaning:
             self.drop_rows_with_missing(dropna_cols)
 
         convert_map = self.config.get("convert_columns", {})
-        type_map = {"int": int, "float": float, "str": str, "bool": bool}
+        type_map = {
+            "int": int,
+            "float": float,
+            "str": str,
+            "bool": bool,
+            "datetime": "datetime",
+        }
         for col, dtype_str in convert_map.items():
             to_type = type_map.get(dtype_str)
             if to_type is None:
@@ -126,7 +138,32 @@ class DataCleaning:
         cleaned_df_path = os.path.join(
             "artifacts", "cleaned_data", f"{self.filename}.csv"
         )
-        self.df.to_csv(cleaned_df_path, index=False, sep=";", decimal=",")
+        if self.filename == "order_reviews":
+            self.df = self.df.drop(
+                ["review_comment_title", "review_comment_message"], axis=1
+            )
+
+            cleaned_df_path_for_sql = os.path.join(
+                "artifacts", "cleaned_data", f"{self.filename}_sql.csv"
+            )
+
+            self.df.to_csv(
+                cleaned_df_path_for_sql,
+                index=False,
+                sep=";",
+                decimal=",",
+                date_format="%Y-%m-%d %H:%M:%S",
+                lineterminator="\n",
+            )
+
+        self.df.to_csv(
+            cleaned_df_path,
+            index=False,
+            sep=";",
+            decimal=",",
+            date_format="%Y-%m-%d %H:%M:%S",
+            lineterminator="\n",
+        )
         logging.info(f"Cleaned DataFrame saved to {cleaned_df_path}")
 
         return self.df
