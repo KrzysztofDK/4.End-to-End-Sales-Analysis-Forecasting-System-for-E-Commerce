@@ -41,6 +41,7 @@ python main.py
 ## 🧪 Steps Performed (in progress)
 1. **Exploratory Data Analysis**
 - avaible in the notebook/EDA.ipynb file
+- conclusions avaible in the reports/basic_eda_conclusions.md file
    
 2. **Data Cleaning**
 - parameters for cleaning avaible in the configs/data_cleaning_config.yaml file
