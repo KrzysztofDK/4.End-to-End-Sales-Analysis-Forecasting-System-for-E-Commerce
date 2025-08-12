@@ -134,8 +134,8 @@ SET
 CREATE TABLE products (
     product_id VARCHAR(255),
     product_category_name VARCHAR(255),
-    product_name_lenght VARCHAR(255),
-    product_description_lenght VARCHAR(255),
+    product_name_length VARCHAR(255),
+    product_description_length VARCHAR(255),
     product_photos_qty VARCHAR(255),
     product_weight_g VARCHAR(255),
     product_length_cm VARCHAR(255),
@@ -151,8 +151,8 @@ LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
 UPDATE products
-SET product_name_lenght = NULLIF(TRIM(REPLACE(product_name_lenght, ',', '.')), ''),
-    product_description_lenght = NULLIF(TRIM(REPLACE(product_description_lenght, ',', '.')), ''),
+SET product_name_length = NULLIF(TRIM(REPLACE(product_name_length, ',', '.')), ''),
+    product_description_length = NULLIF(TRIM(REPLACE(product_description_length, ',', '.')), ''),
     product_photos_qty = NULLIF(TRIM(REPLACE(product_photos_qty, ',', '.')), ''),
     product_weight_g = NULLIF(TRIM(REPLACE(product_weight_g, ',', '.')), ''),
     product_length_cm = NULLIF(TRIM(REPLACE(product_length_cm, ',', '.')), ''),
@@ -160,8 +160,8 @@ SET product_name_lenght = NULLIF(TRIM(REPLACE(product_name_lenght, ',', '.')), '
     product_width_cm = NULLIF(TRIM(REPLACE(product_width_cm, ',', '.')), '');
 
 ALTER TABLE products
-MODIFY product_name_lenght DECIMAL(8,2),
-MODIFY product_description_lenght DECIMAL(8,2),
+MODIFY product_name_length DECIMAL(8,2),
+MODIFY product_description_length DECIMAL(8,2),
 MODIFY product_photos_qty DECIMAL(8,2),
 MODIFY product_weight_g DECIMAL(8,2),
 MODIFY product_length_cm DECIMAL(8,2),
