@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ## 🔧 Run by:
 python main.py
 
-## 🧪 Steps Performed (in progress)
+## 🧪 Steps Performed
 1. **Exploratory Data Analysis**
 - avaible in the notebook/EDA.ipynb file
 - conclusions avaible in the reports/basic_eda_conclusions.md file
@@ -50,9 +50,9 @@ python main.py
 - avaible in the SQL location
    
 4. **Preparing a dashboard using Power BI (Star Schema)**
-- avaible in the reports/dashboard.pbix file
+- avaible in the reports/dashboard.pbix od dashboard.pdf files
 
-5. **Customer classification (ANN Keras)**
+5. **Customer classification (ANN Keras)** (in progress)
 
 6. **Sentiment analysis (BERT)**
 
