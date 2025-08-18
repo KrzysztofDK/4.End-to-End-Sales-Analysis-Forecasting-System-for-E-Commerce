@@ -53,6 +53,8 @@ python main.py
 - avaible in the reports/dashboard.pbix or dashboard.pdf files
 
 5. **Customer classification (ANN Keras)** (in progress)
+- Whether a new customer will make a second purchase within 90 days of their first transaction or not (binary).
+- (XGBoost will probably give a better result, but the project is for demonstration purposes only)
 
 6. **Sentiment analysis**
 
