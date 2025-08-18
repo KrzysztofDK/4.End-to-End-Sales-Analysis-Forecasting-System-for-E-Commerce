@@ -50,13 +50,13 @@ python main.py
 - avaible in the SQL location
    
 4. **Preparing a dashboard using Power BI (Star Schema)**
-- avaible in the reports/dashboard.pbix od dashboard.pdf files
+- avaible in the reports/dashboard.pbix or dashboard.pdf files
 
 5. **Customer classification (ANN Keras)** (in progress)
 
-6. **Sentiment analysis (BERT)**
+6. **Sentiment analysis**
 
-7. **Sale forecasting (LSTM Keras)**
+7. **Sale forecasting**
 
 8. **Streamlit: A Simple Prediction App**
 
