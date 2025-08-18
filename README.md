@@ -47,14 +47,15 @@ python main.py
 - parameters for cleaning avaible in the configs/data_cleaning_config.yaml file
    
 3. **Preparing data for the dashboard using SQL**
-- avaible in the SQL location
+- avaible in the SQL/ location
    
 4. **Preparing a dashboard using Power BI (Star Schema)**
 - avaible in the reports/dashboard.pbix or dashboard.pdf files
 
-5. **Customer classification (ANN Keras)** (in progress)
+5. **Customer classification (ANN Keras  
+XGBoost will probably give a better result, but the project is for demonstration purposes only)** (in progress)
 - Whether a new customer will make a second purchase within 90 days of their first transaction or not (binary).
-- (XGBoost will probably give a better result, but the project is for demonstration purposes only)
+- SQL code avaible in SQL/customer_classification_features.sql
 
 6. **Sentiment analysis**
 

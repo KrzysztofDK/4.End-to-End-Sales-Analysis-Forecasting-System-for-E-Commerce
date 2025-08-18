@@ -25,6 +25,10 @@ def main():
         cleaning = DataCleaning(df=df, filename=name, cleaning_config=config)
         cleaned_dataframes[name] = cleaning.run_all_cleaning_functions_and_save()
 
+    customer_classification_df = (
+        loader.initiate_sql_data_ingestion_agumentation_merging()
+    )
+
     logging.info("Main program ended.")
 
 
