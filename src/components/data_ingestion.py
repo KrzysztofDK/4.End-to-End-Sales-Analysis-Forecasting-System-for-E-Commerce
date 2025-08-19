@@ -5,7 +5,9 @@ import os
 from dataclasses import dataclass
 
 import pandas as pd
+import mysql.connector
 
+from dotenv import load_dotenv
 from src.exception import CustomException
 from src.logger import logging
 
@@ -58,6 +60,7 @@ class SqlDataIngestionConfig:
     customer_classification_features_data_path: str = os.path.join(
         "SQL", "data", "customer_classification_features.csv"
     )
+    env_sql_config_path: str = os.path.join("configs", "sqlconfig.env")
 
 
 class DataIngestion:
@@ -96,7 +99,43 @@ class DataIngestion:
             logging.info("Function to ingest data has encountered a problem.")
             raise CustomException(e, sys) from e
 
-    def initiate_sql_data_ingestion_agumentation_merging(self) -> pd.DataFrame:
+    def load_sql_save_to_csv(self) -> None:
+        """Function to load specific sql database and save to csv."""
+
+        logging.info("Function to load sql db and save as csv has started.")
+
+        try:
+            load_dotenv(dotenv_path=self.sql_ingestion_config.env_sql_config_path)
+            conn = mysql.connector.connect(
+                host="localhost",
+                user=os.getenv("MYSQL_USER"),
+                password=os.getenv("MYSQL_PASSWORD"),
+                database=os.getenv("MYSQL_DB"),
+            )
+
+            df = pd.read_sql(
+                "SELECT customer_unique_id, y_repeat_90d FROM customer_label", conn
+            )
+            df.to_csv(
+                self.sql_ingestion_config.customer_label_data_path,
+                index=False,
+                sep=",",
+                quotechar='"',
+                quoting=1,
+                decimal=".",
+            )
+
+            conn.close()
+
+        except Exception as e:
+            logging.info(
+                "Function to load sql db and save as csv has encountered a problem."
+            )
+            raise CustomException(e, sys) from e
+
+    def initiate_classification_data_ingestion_agumentation_merging(
+        self,
+    ) -> pd.DataFrame:
         """Function to initiate sql data ingestion, agumentation and merging.
 
         Raises:
@@ -124,15 +163,17 @@ class DataIngestion:
             )
 
             df = (
-                first_order.merge(first_order_items, on="customer_id", how="left")
-                .merge(first_order_payment, on="customer_id", how="left")
-                .merge(first_order_customer, on="customer_id", how="left")
-                .merge(customer_label, on="customer_id", how="left")
+                first_order.merge(
+                    first_order_items, on="customer_unique_id", how="left"
+                )
+                .merge(first_order_payment, on="customer_unique_id", how="left")
+                .merge(first_order_customer, on="customer_unique_id", how="left")
+                .merge(customer_label, on="customer_unique_id", how="left")
             )
 
             df["dow"] = (
                 pd.to_datetime(
-                    df["t0_order_approved_at"],
+                    df["t0_order_date"],
                     errors="coerce",
                     format="%Y-%m-%d %H:%M:%S",
                 ).dt.dayofweek
@@ -140,7 +181,7 @@ class DataIngestion:
             )
 
             df["month"] = pd.to_datetime(
-                df["t0_order_approved_at"], errors="coerce", format="%Y-%m-%d %H:%M:%S"
+                df["t0_order_date"], errors="coerce", format="%Y-%m-%d %H:%M:%S"
             ).dt.month
 
             df["first_gmv"] = df["total_items_value"] + df["total_freight_value"]
@@ -151,7 +192,6 @@ class DataIngestion:
                 sep=",",
                 decimal=".",
                 date_format="%Y-%m-%d %H:%M:%S",
-                encoding="utf-8",
             )
 
             return df

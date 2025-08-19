@@ -1,4 +1,4 @@
-# Preliminary EDA made in Power BI Conclusions
+# Preliminary EDA made in notebook.
 
 ## 1. Source Data
 - Dataset: Olist Brazilian E-Commerce Dataset,

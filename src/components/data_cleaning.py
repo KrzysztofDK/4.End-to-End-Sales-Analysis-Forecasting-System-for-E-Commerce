@@ -1,4 +1,4 @@
-"""Module to clean data after basic EDA in Power BI"""
+"""Module to clean data"""
 
 import sys
 import os
@@ -73,10 +73,6 @@ class DataCleaning:
         Args:
             columns (list[str]): columns to check.
         """
-
-        if not columns:
-            logging.info("No columns provided for function to drop rows.")
-            return
 
         logging.info("Function to drop rows has started.")
         before = len(self.df)

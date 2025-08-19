@@ -14,7 +14,7 @@ def main():
     loader = DataIngestion()
     raw_datasets_dict = loader.initiate_data_ingestion()
 
-    cleaning_config_path = os.path.join("configs", "data_cleaning_config.yaml")
+    cleaning_config_path = os.path.join("configs", "raw_data_cleaning_config.yaml")
     with open(cleaning_config_path, "r") as file:
         cleaning_configs = yaml.safe_load(file)
 
@@ -25,8 +25,27 @@ def main():
         cleaning = DataCleaning(df=df, filename=name, cleaning_config=config)
         cleaned_dataframes[name] = cleaning.run_all_cleaning_functions_and_save()
 
+    # loader.load_sql_save_to_csv()
+
     customer_classification_df = (
-        loader.initiate_sql_data_ingestion_agumentation_merging()
+        loader.initiate_classification_data_ingestion_agumentation_merging()
+    )
+
+    cleaning_config_path = os.path.join(
+        "configs", "classification_data_cleaning_config.yaml"
+    )
+    with open(cleaning_config_path, "r") as file:
+        cleaning_configs = yaml.safe_load(file)
+
+    df_name = "customer_classification_features"
+    config = cleaning_configs.get(df_name, {})
+    classification_cleaning = DataCleaning(
+        df=customer_classification_df,
+        filename=df_name,
+        cleaning_config=config,
+    )
+    cleaned_customer_classification_df = (
+        classification_cleaning.run_all_cleaning_functions_and_save()
     )
 
     logging.info("Main program ended.")

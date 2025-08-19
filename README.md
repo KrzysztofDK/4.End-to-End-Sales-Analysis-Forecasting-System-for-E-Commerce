@@ -31,16 +31,12 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - scikit-learn
 - Streamlit
 - pyyaml
-
-## 🔧 Installation:
-pip install -r requirements.txt
-
-## 🔧 Run by:
-python main.py
+- mysql-connector-python
+- python-dotenv
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**
-- avaible in the notebook/EDA.ipynb file
+- EDA avaible in the notebook/raw_data_EDA.ipynb file
 - conclusions avaible in the reports/basic_eda_conclusions.md file
    
 2. **Data Cleaning**
@@ -55,7 +51,8 @@ python main.py
 5. **Customer classification (ANN Keras  
 XGBoost will probably give a better result, but the project is for demonstration purposes only)** (in progress)
 - Whether a new customer will make a second purchase within 90 days of their first transaction or not (binary).
-- SQL code avaible in SQL/customer_classification_features.sql
+- SQL code avaible in SQL/customer_classification_features.sql and data_ingestion.py
+- EDA avaible in the notebook/classification_EDA.ipynb file
 
 6. **Sentiment analysis**
 

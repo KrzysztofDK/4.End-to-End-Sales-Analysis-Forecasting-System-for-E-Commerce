@@ -1,0 +1,8 @@
+customer_classification_features:
+  convert_columns:
+    t0_order_date: datetime
+    payment_installments: int
+  dropna_columns:
+    - payment_type
+    - payment_value
+    - payment_installments

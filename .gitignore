@@ -146,6 +146,7 @@ venv.bak/
 .vscode/
 logs/
 .pylintrc
+sqlconfig.env
 
 # Spyder project settings
 .spyderproject
