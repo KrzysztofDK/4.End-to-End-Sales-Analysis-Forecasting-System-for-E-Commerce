@@ -96,6 +96,17 @@ class DataCleaning:
             after = len(self.df)
             logging.info(f"Dropped {before - after} duplicated rows.")
 
+    def drop_columns(self, columns: list[str]) -> None:
+        """Function to drop given columns in dataframe.
+
+        Args:
+            columns (list[str]): list of columns names to drop.
+        """
+
+        logging.info("Function to drop columns has started.")
+
+        self.df.drop(columns, axis=1, inplace=True)
+
     def run_all_cleaning_functions_and_save(self) -> pd.DataFrame:
         """Function to run all cleaning functions.
 
@@ -130,6 +141,10 @@ class DataCleaning:
         rename_map = self.config.get("rename_columns", {})
         if rename_map:
             self.rename_columns(rename_map)
+
+        drop_cols = self.config.get("drop_columns", [])
+        if drop_cols:
+            self.drop_columns(drop_cols)
 
         cleaned_df_path = os.path.join(
             "artifacts", "cleaned_data", f"{self.filename}.csv"

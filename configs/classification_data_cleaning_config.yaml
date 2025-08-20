@@ -6,3 +6,7 @@ customer_classification_features:
     - payment_type
     - payment_value
     - payment_installments
+  drop_columns:
+    - first_gmv
+    - total_items_value
+    - customer_city
