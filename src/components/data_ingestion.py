@@ -5,9 +5,10 @@ import os
 from dataclasses import dataclass
 
 import pandas as pd
+import numpy as np
 import mysql.connector
-
 from dotenv import load_dotenv
+
 from src.exception import CustomException
 from src.logger import logging
 
@@ -185,6 +186,33 @@ class DataIngestion:
             ).dt.month
 
             df["first_gmv"] = df["total_items_value"] + df["total_freight_value"]
+
+            df["dow_sin"] = np.sin(2 * np.pi * df["dow"] / 7)
+
+            df["dow_cos"] = np.cos(2 * np.pi * df["dow"] / 7)
+
+            df["month_sin"] = np.sin(2 * np.pi * df["month"] / 12)
+
+            df["month_cos"] = np.cos(2 * np.pi * df["month"] / 12)
+
+            bins = [0, 5, 11, 17, 24]
+            labels = ["0-5", "6-11", "12-17", "18-24"]
+            df["installments_bins"] = pd.cut(
+                df["payment_installments"],
+                bins=bins,
+                labels=labels,
+                include_lowest=True,
+            ).astype(str)
+
+            top_20 = (
+                df["top_category_by_priciest_item"]
+                .value_counts()
+                .nlargest(20)
+                .index.tolist()
+            )
+            df["top20_categories_and_others"] = df[
+                "top_category_by_priciest_item"
+            ].apply(lambda x: x if x in top_20 else "others")
 
             df.to_csv(
                 self.sql_ingestion_config.customer_classification_features_data_path,

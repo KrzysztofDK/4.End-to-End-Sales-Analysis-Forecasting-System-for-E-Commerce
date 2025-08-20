@@ -10,3 +10,10 @@ customer_classification_features:
     - first_gmv
     - total_items_value
     - customer_city
+    - dow
+    - month
+    - customer_unique_id
+    - t0_order_id
+    - t0_order_date
+    - payment_installments
+    - top_category_by_priciest_item

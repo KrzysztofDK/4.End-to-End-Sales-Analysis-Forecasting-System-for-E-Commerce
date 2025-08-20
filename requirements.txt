@@ -7,4 +7,7 @@ streamlit
 pyyaml
 mysql-connector-python
 python-dotenv
+tensorflow
+openpyxl
+imblearn
 -e .

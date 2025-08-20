@@ -6,6 +6,10 @@ from src.logger import logging
 from src.exception import CustomException
 from src.components.data_ingestion import DataIngestion
 from src.components.data_cleaning import DataCleaning
+from src.components.preprocessing import Preprocessor
+from src.components.model_creation import ANNModel
+from src.components.model_training import ModelTrainer
+from src.components.model_evaluation import ModelEvaluator
 
 
 def main():
@@ -47,6 +51,26 @@ def main():
     cleaned_customer_classification_df = (
         classification_cleaning.run_all_cleaning_functions_and_save()
     )
+
+    preprocessor = Preprocessor(
+        cleaned_customer_classification_df,
+        "y_repeat_90d",
+        test_size=0.2,
+        random_state=42,
+    )
+    X_train, X_val, X_test, y_train, y_val, y_test = preprocessor.split_fit_transform()
+
+    ann = ANNModel(X_train.shape[1])
+    classification_ann_model = ann.build_model()
+
+    trainer = ModelTrainer(classification_ann_model)
+    trainer.train_and_save(X_train, y_train, X_val, y_val, epochs=20, batch_size=32)
+
+    model_path = os.path.join("models", "classification_ann_model.h5")
+    excel_path = os.path.join("reports", "models_evaluations.xlsx")
+
+    evaluator = ModelEvaluator(model_path, excel_path)
+    evaluator.evaluate_model(X_test, y_test)
 
     logging.info("Main program ended.")
 

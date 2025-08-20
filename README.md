@@ -33,6 +33,9 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - pyyaml
 - mysql-connector-python
 - python-dotenv
+- tensorflow
+- openpyxl
+- imblearn
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**
