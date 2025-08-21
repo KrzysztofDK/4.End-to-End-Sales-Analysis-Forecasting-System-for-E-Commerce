@@ -31,7 +31,7 @@ def main():
 
     # loader.load_sql_save_to_csv()
 
-    customer_classification_df = (
+    binary_classification_df = (
         loader.initiate_classification_data_ingestion_agumentation_merging()
     )
 
@@ -41,10 +41,10 @@ def main():
     with open(cleaning_config_path, "r") as file:
         cleaning_configs = yaml.safe_load(file)
 
-    df_name = "customer_classification_features"
+    df_name = "binary_classification"
     config = cleaning_configs.get(df_name, {})
     classification_cleaning = DataCleaning(
-        df=customer_classification_df,
+        df=binary_classification_df,
         filename=df_name,
         cleaning_config=config,
     )
@@ -60,16 +60,22 @@ def main():
     )
     X_train, X_val, X_test, y_train, y_val, y_test = preprocessor.split_fit_transform()
 
-    ann = ANNModel(X_train.shape[1])
-    classification_ann_model = ann.build_model()
+    ann = ANNModel(input_dim=X_train.shape[1])
 
-    trainer = ModelTrainer(classification_ann_model)
-    trainer.train_and_save(X_train, y_train, X_val, y_val, epochs=20, batch_size=32)
+    trainer = ModelTrainer()
+    trainer.train_and_save(
+        ann=ann,
+        X_train=X_train,
+        y_train=y_train,
+        X_val=X_val,
+        y_val=y_val,
+    )
 
     model_path = os.path.join("models", "classification_ann_model.h5")
     excel_path = os.path.join("reports", "models_evaluations.xlsx")
 
     evaluator = ModelEvaluator(model_path, excel_path)
+    evaluator.find_best_threshold(X_val, y_val)
     evaluator.evaluate_model(X_test, y_test)
 
     logging.info("Main program ended.")

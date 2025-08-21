@@ -139,9 +139,6 @@ class DataIngestion:
     ) -> pd.DataFrame:
         """Function to initiate sql data ingestion, agumentation and merging.
 
-        Raises:
-            CustomException
-
         Returns:
             pd.DataFrame: DataFrame of merged sql csv files.
         """

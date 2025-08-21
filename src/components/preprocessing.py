@@ -124,17 +124,17 @@ class Preprocessor:
 
             X_train_res, y_train_res = sm.fit_resample(X_train_transformed, y_train)
 
+            return (
+                X_train_res,
+                X_val_transformed,
+                X_test_transformed,
+                y_train_res,
+                y_val,
+                y_test,
+            )
+
         except Exception as e:
             logging.info(
                 "Function to split and transform data has encountered a problem."
             )
             raise CustomException(e, sys) from e
-
-        return (
-            X_train_res,
-            X_val_transformed,
-            X_test_transformed,
-            y_train_res,
-            y_val,
-            y_test,
-        )

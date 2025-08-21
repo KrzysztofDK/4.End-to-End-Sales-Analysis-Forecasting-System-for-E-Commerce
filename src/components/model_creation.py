@@ -1,13 +1,13 @@
-"""Module to create models"""
+"""Module to create models with hyperparameter tuning"""
 
-from keras import layers, models
+from keras import layers, models, optimizers
 from keras.losses import BinaryFocalCrossentropy
 
 from src.logger import logging
 
 
 class ANNModel:
-    """Class to create ANN model"""
+    """Class to create ANN model for hyperparameter tuning"""
 
     def __init__(self, input_dim: int):
         """Initialize ANNModel.
@@ -15,28 +15,47 @@ class ANNModel:
         Args:
             input_dim (int): Number of input features (X_train.shape[1]).
         """
-
         self.input_dim = input_dim
-        self.model = None
 
-    def build_model(self):
-        """Function to build and compile ANN model."""
+    def build_model(self, hp):
+        """Function for KerasTuner to build a tunable ANN model."""
 
-        logging.info("Function to build model has started.")
+        logging.info("Function to build tunable model has started.")
 
-        self.model = models.Sequential(
-            [
-                layers.InputLayer(input_shape=(self.input_dim,)),
-                layers.Dense(128, activation="relu"),
-                layers.Dropout(0.3),
-                layers.Dense(64, activation="relu"),
-                layers.Dropout(0.2),
-                layers.Dense(1, activation="sigmoid"),
-            ]
+        model = models.Sequential()
+        model.add(layers.InputLayer(input_shape=(self.input_dim,)))
+
+        model.add(
+            layers.Dense(
+                units=hp.Int("units1", min_value=64, max_value=256, step=64),
+                activation="relu",
+            )
         )
-        self.model.compile(
-            optimizer="adam",
+        model.add(
+            layers.Dropout(
+                rate=hp.Float("dropout1", min_value=0.2, max_value=0.5, step=0.1)
+            )
+        )
+
+        model.add(
+            layers.Dense(
+                units=hp.Int("units2", min_value=64, max_value=256, step=64),
+                activation="relu",
+            )
+        )
+        model.add(
+            layers.Dropout(
+                rate=hp.Float("dropout2", min_value=0.2, max_value=0.5, step=0.1)
+            )
+        )
+
+        model.add(layers.Dense(1, activation="sigmoid"))
+
+        lr = hp.Choice("lr", values=[1e-3, 5e-4, 3e-4])
+
+        model.compile(
+            optimizer=optimizers.Adam(learning_rate=lr),
             loss=BinaryFocalCrossentropy(gamma=2.0, alpha=0.75),
             metrics=["accuracy", "AUC"],
         )
-        return self.model
+        return model
