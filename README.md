@@ -58,7 +58,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - EDA avaible in the notebook/classification_EDA.ipynb file
 
 6. **Revenue per day forecasting - 30 days ahead (Prophet)**
-- SQL code avaible in SQL/forecasting.sql and data_ingestion.py
+- SQL code avaible in SQL/forecasting.sql
 - EDA avaible in the notebook/forecasting_EDA.ipynb file
 
 7. **Sentiment analysis (BERTimbau)**
