@@ -57,9 +57,11 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - SQL code avaible in SQL/binary_classification.sql and data_ingestion.py
 - EDA avaible in the notebook/classification_EDA.ipynb file
 
-6. **Sentiment analysis**
+6. **Revenue per day forecasting - 30 days ahead (Prophet)**
+- SQL code avaible in SQL/forecasting.sql and data_ingestion.py
+- EDA avaible in the notebook/forecasting_EDA.ipynb file
 
-7. **Sale forecasting**
+7. **Sentiment analysis (BERTimbau)**
 
 8. **Streamlit: A Simple Prediction App**
 
