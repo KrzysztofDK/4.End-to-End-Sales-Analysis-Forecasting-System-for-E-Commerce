@@ -51,10 +51,10 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 4. **Preparing a dashboard using Power BI (Star Schema)**
 - avaible in the reports/dashboard.pbix or dashboard.pdf files
 
-5. **Customer classification (ANN Keras  
-XGBoost will probably give a better result, but the project is for demonstration purposes only)** (in progress)
+5. **Binary classification (ANN Keras**
+**XGBoost will probably give a better result, but the project is for demonstration purposes only)** (in progress)
 - Whether a new customer will make a second purchase within 90 days of their first transaction or not (binary).
-- SQL code avaible in SQL/customer_classification_features.sql and data_ingestion.py
+- SQL code avaible in SQL/binary_classification.sql and data_ingestion.py
 - EDA avaible in the notebook/classification_EDA.ipynb file
 
 6. **Sentiment analysis**

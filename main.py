@@ -48,12 +48,12 @@ def main():
         filename=df_name,
         cleaning_config=config,
     )
-    cleaned_customer_classification_df = (
+    cleaned_binary_classification_df = (
         classification_cleaning.run_all_cleaning_functions_and_save()
     )
 
     preprocessor = Preprocessor(
-        cleaned_customer_classification_df,
+        cleaned_binary_classification_df,
         "y_repeat_90d",
         test_size=0.2,
         random_state=42,

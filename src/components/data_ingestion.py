@@ -59,7 +59,7 @@ class SqlDataIngestionConfig:
         "SQL", "data", "first_order_payment.csv"
     )
     customer_classification_features_data_path: str = os.path.join(
-        "SQL", "data", "customer_classification_features.csv"
+        "SQL", "data", "binary_classification.csv"
     )
     env_sql_config_path: str = os.path.join("configs", "sqlconfig.env")
 
