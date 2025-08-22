@@ -1,7 +1,7 @@
 # Conclusions from EDA made in notebook before ANN model creation.
 
 ## 1. Source Data
-- Dataset: Originally Olist Brazilian E-Commerce Dataset, now customer_classification dataset made in SQL,
+- Dataset: Originally Olist Brazilian E-Commerce Dataset, now classification dataset made in SQL,
 - Number of tables: 1,
 - Number of records: ~100,000.
 

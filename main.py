@@ -16,7 +16,7 @@ def main():
     logging.info("Main program has started.")
 
     loader = DataIngestion()
-    raw_datasets_dict = loader.initiate_data_ingestion()
+    raw_datasets_dict = loader.initiate_raw_data_ingestion()
 
     cleaning_config_path = os.path.join("configs", "raw_data_cleaning_config.yaml")
     with open(cleaning_config_path, "r") as file:
@@ -29,7 +29,7 @@ def main():
         cleaning = DataCleaning(df=df, filename=name, cleaning_config=config)
         cleaned_dataframes[name] = cleaning.run_all_cleaning_functions_and_save()
 
-    # loader.load_sql_save_to_csv()
+    loader.load_classification_data_save_to_csv()
 
     binary_classification_df = (
         loader.initiate_classification_data_ingestion_agumentation_merging()
@@ -77,6 +77,8 @@ def main():
     evaluator = ModelEvaluator(model_path, excel_path)
     evaluator.find_best_threshold(X_val, y_val)
     evaluator.evaluate_model(X_test, y_test)
+    
+    forecasting_df = 
 
     logging.info("Main program ended.")
 

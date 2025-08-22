@@ -14,7 +14,7 @@ from src.logger import logging
 
 
 @dataclass
-class DataIngestionConfig:
+class RawDataIngestionConfig:
     """Config class with paths to data files."""
 
     customers_data_path: str = os.path.join(
@@ -44,7 +44,7 @@ class DataIngestionConfig:
 
 
 @dataclass
-class SqlDataIngestionConfig:
+class ClassificationDataIngestionConfig:
     """Config class with paths to data files."""
 
     customer_label_data_path: str = os.path.join("SQL", "data", "customer_label.csv")
@@ -68,10 +68,10 @@ class DataIngestion:
     """Class to ingest data."""
 
     def __init__(self):
-        self.ingestion_config = DataIngestionConfig()
-        self.sql_ingestion_config = SqlDataIngestionConfig()
+        self.ingestion_config = RawDataIngestionConfig()
+        self.sql_ingestion_config = ClassificationDataIngestionConfig()
 
-    def initiate_data_ingestion(self) -> dict:
+    def initiate_raw_data_ingestion(self) -> dict:
         """Function to initiate data ingest.
 
         Raises:
@@ -100,7 +100,7 @@ class DataIngestion:
             logging.info("Function to ingest data has encountered a problem.")
             raise CustomException(e, sys) from e
 
-    def load_sql_save_to_csv(self) -> None:
+    def load_classification_data_save_to_csv(self) -> None:
         """Function to load specific sql database and save to csv."""
 
         logging.info("Function to load sql db and save as csv has started.")
