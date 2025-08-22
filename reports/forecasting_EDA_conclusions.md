@@ -19,4 +19,5 @@
 - A significant outlier is observed on November 24th, which could be related to Black Friday, but it is not repeated annually,
 - December shows weaker performance after the spike, contrary to typical holiday sales patterns,
 - Towards the end of the series, the data appear to abruptly drop, suggesting missing or incomplete data rather than an actual business collapse,
-- Monthly revenue highlights the long-term growth trajectory of the platform, with fluctuations becoming more pronounced as the business scales.
+- Monthly revenue highlights the long-term growth trajectory of the platform, with fluctuations becoming more pronounced as the business scales,
+- I decided to cut middle spike and time of periods with missing data.

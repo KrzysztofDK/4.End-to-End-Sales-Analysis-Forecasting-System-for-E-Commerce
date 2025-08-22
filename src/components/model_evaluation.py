@@ -4,12 +4,15 @@ import os
 import sys
 
 import keras
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.metrics import (
     classification_report,
     roc_auc_score,
     precision_recall_curve,
+    mean_absolute_error,
+    mean_squared_error,
 )
 
 from src.logger import logging
@@ -17,7 +20,7 @@ from src.exception import CustomException
 
 
 class ModelEvaluator:
-    """Class responsible for model evaluation with classification_raport and roc_auc"""
+    """Class responsible for model evaluation (ANN or Prophet)"""
 
     _excel_cleared = False
 
@@ -28,17 +31,29 @@ class ModelEvaluator:
             model_path (str): Location of model to evaluate.
             excel_path (str): Location to wrire excel file with metrics.
         """
-        self.model = keras.models.load_model(model_path)
-        self.model_name = os.path.splitext(os.path.basename(model_path))[0]
+        self.model_path = model_path
         self.excel_path = excel_path
+        self.model_name = os.path.splitext(os.path.basename(model_path))[0]
         self.best_threshold = 0.5
+
+        try:
+            if model_path.endswith(".h5"):
+                self.model_type = "ann"
+                self.model = keras.models.load_model(model_path)
+            elif model_path.endswith(".pkl"):
+                self.model_type = "prophet"
+                self.model = joblib.load(model_path)
+
+        except Exception as e:
+            logging.info("Initializing ModelEvaluator has failed.")
+            raise CustomException(e, sys) from e
 
         if not ModelEvaluator._excel_cleared:
             if os.path.exists(excel_path):
                 os.remove(excel_path)
             ModelEvaluator._excel_cleared = True
 
-    def find_best_threshold(self, X_val: np.ndarray, y_val: np.ndarray) -> None:
+    def find_best_threshold(self, X_val: np.ndarray, y_val: np.ndarray = None) -> None:
         """Find best threshold based on F1 score from validation set.
 
         Args:
@@ -58,28 +73,49 @@ class ModelEvaluator:
 
         logging.info(f"Best threshold found: {self.best_threshold:.4f}")
 
-    def evaluate_model(self, X_test: np.ndarray, y_test: np.ndarray) -> None:
-        """Function to evaluate model
+    def evaluate_model(self, X_test, y_test) -> None:
+        """Evaluate model depending on its type (ANN or Prophet).
 
         Args:
-            X_test (np.ndarray): Test features
-            y_test (np.ndarray): Test labels
+            X_test: np.ndarray (for ANN) or pd.DataFrame (for Prophet)
+            y_test: np.ndarray (for ANN) or pd.Series (for Prophet)
         """
 
         logging.info("Function to evaluate model has started.")
 
         try:
-            preds = self.model.predict(X_test).ravel()
-            preds_binary = (preds > self.best_threshold).astype(int)
+            if self.model_type == "ann":
+                preds = self.model.predict(X_test).ravel()
+                preds_binary = (preds > self.best_threshold).astype(int)
 
-            report = classification_report(y_test, preds_binary, output_dict=True)
-            auc = roc_auc_score(y_test, preds)
+                report = classification_report(y_test, preds_binary, output_dict=True)
+                auc = roc_auc_score(y_test, preds)
 
-            df_report = pd.DataFrame(report).transpose()
-            df_report["roc_auc"] = np.nan
-            df_report.loc["overall", :] = np.nan
-            df_report.loc["overall", "roc_auc"] = auc
-            df_report.loc["overall", "threshold"] = self.best_threshold
+                df_report = pd.DataFrame(report).transpose()
+                df_report["roc_auc"] = np.nan
+                df_report.loc["overall", :] = np.nan
+                df_report.loc["overall", "roc_auc"] = auc
+                df_report.loc["overall", "threshold"] = self.best_threshold
+
+            elif self.model_type == "prophet":
+                forecast = self.model.predict(X_test)
+                y_pred = forecast["yhat"].values
+                y_true = y_test.values
+
+                mae = mean_absolute_error(y_true, y_pred)
+                mse = mean_squared_error(y_true, y_pred)
+                rmse = mse**0.5
+                mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+
+                df_report = pd.DataFrame(
+                    {
+                        "mae": [mae],
+                        "mse": [mse],
+                        "rmse": [rmse],
+                        "mape": [mape],
+                    },
+                    index=["metrics"],
+                )
 
             header = pd.DataFrame(
                 [[f"Model: {self.model_name}"]], columns=["classification_report"]

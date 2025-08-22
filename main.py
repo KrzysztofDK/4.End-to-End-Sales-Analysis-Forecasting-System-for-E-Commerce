@@ -7,8 +7,8 @@ from src.exception import CustomException
 from src.components.data_ingestion import DataIngestion
 from src.components.data_cleaning import DataCleaning
 from src.components.preprocessing import Preprocessor
-from src.components.model_creation import ANNModel
-from src.components.model_training import ModelTrainer
+from src.components.model_creation import ANNModel, ProphetModel
+from src.components.model_training import ANNTrainer, ProphetTrainer
 from src.components.model_evaluation import ModelEvaluator
 
 
@@ -62,8 +62,8 @@ def main():
 
     # ann = ANNModel(input_dim=X_train.shape[1])
 
-    # trainer = ModelTrainer()
-    # trainer.train_and_save(
+    # trainer = ANNTrainer()
+    # trainer.train_and_save_ann_model(
     #     ann=ann,
     #     X_train=X_train,
     #     y_train=y_train,
@@ -72,7 +72,7 @@ def main():
     # )
 
     # model_path = os.path.join("models", "classification_ann_model.h5")
-    # excel_path = os.path.join("reports", "models_evaluations.xlsx")
+    excel_path = os.path.join("reports", "models_evaluations.xlsx")
 
     # evaluator = ModelEvaluator(model_path, excel_path)
     # evaluator.find_best_threshold(X_val, y_val)
@@ -94,6 +94,27 @@ def main():
         cleaning_config=config,
     )
     cleaned_forecasting_df = forecasting_cleaning.run_all_cleaning_functions_and_save()
+
+    prophet_model = ProphetModel().get_model()
+    prophet_trainer = ProphetTrainer(model=prophet_model)
+    X_test, y_test = prophet_trainer.fit_split_save_test_model(
+        cleaned_forecasting_df, test_size=30
+    )
+
+    model_path = os.path.join("models", "forecasting_prophet_splited_model.pkl")
+    evaluator = ModelEvaluator(model_path, excel_path)
+    evaluator.evaluate_model(X_test, y_test)
+
+    prophet_model_final = ProphetModel().get_model()
+    prophet_trainer_final = ProphetTrainer(model=prophet_model_final)
+    prophet_model_final = prophet_trainer_final.fit_save_final_model(
+        cleaned_forecasting_df
+    )
+
+    future = prophet_model_final.make_future_dataframe(periods=30, freq="D")
+    forecast = prophet_model_final.predict(future)
+
+    print(forecast.tail(30))
 
     logging.info("Main program ended.")
 

@@ -36,6 +36,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - tensorflow
 - openpyxl
 - imblearn
+- prophet
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**

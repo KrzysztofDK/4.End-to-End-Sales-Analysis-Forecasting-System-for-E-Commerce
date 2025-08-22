@@ -256,6 +256,11 @@ class DataIngestion:
             df = pd.read_csv(
                 self.forecasting_ingestion_config.forecasting_data_path, sep=","
             )
+            spike_threshold = df["daily_revenue"].quantile(0.995)
+            df = df[df["daily_revenue"] <= spike_threshold]
+            df = df[
+                (df["order_date"] >= "2017-02-01") & (df["order_date"] <= "2018-08-01")
+            ]
             return df
 
         except Exception as e:

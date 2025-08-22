@@ -40,9 +40,14 @@ class DataCleaning:
                     "Function to convert column types in DataCleaning class has started."
                 )
                 if to_type == "datetime" or to_type == pd.Timestamp:
-                    self.df[column] = pd.to_datetime(
-                        self.df[column], errors="coerce", format="%Y-%m-%d %H:%M:%S"
-                    )
+                    if self.filename == "forecasting_daily_revenue":
+                        self.df[column] = pd.to_datetime(
+                            self.df[column], errors="coerce", format="%Y-%m-%d"
+                        )
+                    else:
+                        self.df[column] = pd.to_datetime(
+                            self.df[column], errors="coerce", format="%Y-%m-%d %H:%M:%S"
+                        )
 
                 else:
                     self.df[column] = self.df[column].astype(to_type)
@@ -167,14 +172,24 @@ class DataCleaning:
                 lineterminator="\n",
             )
 
-        self.df.to_csv(
-            cleaned_df_path,
-            index=False,
-            sep=";",
-            decimal=",",
-            date_format="%Y-%m-%d %H:%M:%S",
-            lineterminator="\n",
-        )
+        if self.filename == "forecasting_daily_revenue":
+            self.df.to_csv(
+                cleaned_df_path,
+                index=False,
+                sep=";",
+                decimal=",",
+                date_format="%Y-%m-%d",
+                lineterminator="\n",
+            )
+        else:
+            self.df.to_csv(
+                cleaned_df_path,
+                index=False,
+                sep=";",
+                decimal=",",
+                date_format="%Y-%m-%d %H:%M:%S",
+                lineterminator="\n",
+            )
         logging.info(f"Cleaned DataFrame saved to {cleaned_df_path}")
 
         return self.df

@@ -1,3 +1,6 @@
 forecasting_daily_revenue:
   convert_columns:
     order_date: datetime
+  rename_columns:
+    order_date: ds
+    daily_revenue: y

@@ -10,4 +10,5 @@ python-dotenv
 tensorflow
 openpyxl
 imblearn
+prophet
 -e .

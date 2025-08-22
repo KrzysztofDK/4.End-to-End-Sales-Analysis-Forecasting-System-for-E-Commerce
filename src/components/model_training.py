@@ -2,16 +2,19 @@
 
 import os
 import sys
+
 import joblib
 import numpy as np
 import keras_tuner as kt
+import pandas as pd
+from prophet import Prophet
 
 from src.logger import logging
 from src.exception import CustomException
 from src.components.model_creation import ANNModel
 
 
-class ModelTrainer:
+class ANNTrainer:
     """
     Class responsible for hyperparameter tuning, final training and saving Keras models.
     """
@@ -19,7 +22,7 @@ class ModelTrainer:
     def __init__(self):
         self.model = None
 
-    def train_and_save(
+    def train_and_save_ann_model(
         self,
         ann: ANNModel,
         X_train: np.ndarray,
@@ -70,7 +73,6 @@ class ModelTrainer:
                 max_trials=tuner_max_trials,
                 executions_per_trial=1,
                 overwrite=True,
-                project_name=tuner_project,
             )
 
             tuner.search(
@@ -103,3 +105,82 @@ class ModelTrainer:
         except Exception as e:
             logging.info("Function to train and save model has encountered a problem.")
             raise CustomException(e, sys) from e
+
+
+class ProphetTrainer:
+    """Class responsible for training Prophet model."""
+
+    def __init__(
+        self,
+        model: Prophet,
+    ):
+        """Initialize trainer with Prophet model and path for saving.
+
+        Args:
+            model (Prophet): An initialized Prophet model instance to train.
+        """
+
+        self.model = model
+        self.X_test = None
+        self.y_test = None
+
+    def fit_split_save_test_model(
+        self,
+        df: pd.DataFrame,
+        test_size: int = 30,
+        model_path: str = os.path.join(
+            "models", "forecasting_prophet_splited_model.pkl"
+        ),
+    ) -> tuple[pd.DataFrame, pd.Series]:
+        """
+        Fit Prophet model on training set, prepare test set, and save the trained model.
+        The last `test_size` rows are held out for evaluation, while the rest is used for training.
+
+        Args:
+            df (pd.DataFrame): DataFrame with ['ds', 'y'].
+            test_size (int): Number of last observations to keep as test.
+            model_path (str, optional): File path where the trained model will be saved.
+                                        Default is 'models/forecasting_prophet_splited_model.pkl'.
+
+        Returns:
+        tuple[pd.DataFrame, pd.Series]:
+            - X_test: DataFrame with the datetime column(s) for prediction
+            - y_test: Series with the actual target values for evaluation
+        """
+        logging.info("Function to split and train Prophet model has started.")
+
+        train_df = df.iloc[:-test_size]
+        test_df = df.iloc[-test_size:]
+
+        self.X_test = test_df[["ds"]]
+        self.y_test = test_df["y"]
+
+        self.model.fit(train_df)
+        joblib.dump(self.model, model_path)
+        logging.info(f"Final Prophet model saved to {model_path}.")
+
+        return self.X_test, self.y_test
+
+    def fit_save_final_model(
+        self,
+        df: pd.DataFrame,
+        model_path: str = os.path.join("models", "forecasting_prophet_model.pkl"),
+    ) -> Prophet:
+        """Fit and save to pkl final Prophet model on provided data.
+
+        Args:
+            df (pd.DataFrame): DataFrame with ['ds', 'y'].
+            model_path (str, optional): File path where the trained model will be saved.
+                                        Default is 'models/forecasting_prophet_model.pkl'.
+
+        Returns:
+            Prophet: Returns trained Prophet model.
+        """
+
+        logging.info("Function to fit final Prophet model has started.")
+
+        self.model.fit(df)
+        joblib.dump(self.model, model_path)
+        logging.info(f"Final Prophet model saved to {model_path}.")
+
+        return self.model
