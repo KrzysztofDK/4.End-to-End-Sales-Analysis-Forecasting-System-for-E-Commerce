@@ -39,27 +39,29 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**
-- EDA avaible in the notebook/raw_data_EDA.ipynb file
-- conclusions avaible in the reports/basic_eda_conclusions.md file
+- EDA avaible in the notebook/raw_data_EDA.ipynb file,
+- EDA conclusions avaible in the reports/basic_eda_conclusions.md file.
    
 2. **Data Cleaning**
-- parameters for cleaning avaible in the configs/data_cleaning_config.yaml file
+- parameters for cleaning avaible in the configs/data_cleaning_config.yaml file.
    
 3. **Preparing data for the dashboard using SQL**
-- avaible in the SQL/ location
+- avaible in the SQL/ location.
    
 4. **Preparing a dashboard using Power BI (Star Schema)**
-- avaible in the reports/dashboard.pbix or dashboard.pdf files
+- avaible in the reports/dashboard.pbix or dashboard.pdf files.
 
 5. **Binary classification (ANN Keras**
 **XGBoost will probably give a better result, but the project is for demonstration purposes only)**
 - Whether a new customer will make a second purchase within 90 days of their first transaction or not (binary),
 - SQL code avaible in SQL/binary_classification.sql and data_ingestion.py files,
-- EDA avaible in the notebook/classification_EDA.ipynb file.
+- EDA avaible in the notebook/classification_EDA.ipynb file,
+- EDA conclusions avaible in the reports/classification_eda_conclusions.md file.
 
 6. **Revenue per day forecasting - 30 days ahead (Prophet)** (in progress)
 - SQL code avaible in SQL/forecasting.sql file,
-- EDA avaible in the notebook/forecasting_EDA.ipynb file.
+- EDA avaible in the notebook/forecasting_EDA.ipynb file,
+- EDA conclusions avaible in the reports/forecasting_eda_conclusions.md file.
 
 7. **Sentiment analysis (BERTimbau)**
 
