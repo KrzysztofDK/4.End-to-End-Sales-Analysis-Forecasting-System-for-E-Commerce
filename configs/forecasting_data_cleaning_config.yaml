@@ -1,0 +1,3 @@
+forecasting_daily_revenue:
+  convert_columns:
+    order_date: datetime

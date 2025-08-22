@@ -15,7 +15,7 @@ from src.logger import logging
 
 @dataclass
 class RawDataIngestionConfig:
-    """Config class with paths to data files."""
+    """Config class with paths to raw data files."""
 
     customers_data_path: str = os.path.join(
         "artifacts", "raw_data", "olist_customers_raw.csv"
@@ -45,7 +45,7 @@ class RawDataIngestionConfig:
 
 @dataclass
 class ClassificationDataIngestionConfig:
-    """Config class with paths to data files."""
+    """Config class with paths to classification data files."""
 
     customer_label_data_path: str = os.path.join("SQL", "data", "customer_label.csv")
     first_order_data_path: str = os.path.join("SQL", "data", "first_order.csv")
@@ -64,12 +64,22 @@ class ClassificationDataIngestionConfig:
     env_sql_config_path: str = os.path.join("configs", "sqlconfig.env")
 
 
+@dataclass
+class ForecastingDataIngestionConfig:
+    """Config class with paths to forecasting data file."""
+
+    forecasting_data_path: str = os.path.join(
+        "SQL", "data", "forecasting_prophet_daily_revenue.csv"
+    )
+
+
 class DataIngestion:
     """Class to ingest data."""
 
     def __init__(self):
-        self.ingestion_config = RawDataIngestionConfig()
-        self.sql_ingestion_config = ClassificationDataIngestionConfig()
+        self.raw_ingestion_config = RawDataIngestionConfig()
+        self.classification_ingestion_config = ClassificationDataIngestionConfig()
+        self.forecasting_ingestion_config = ForecastingDataIngestionConfig()
 
     def initiate_raw_data_ingestion(self) -> dict:
         """Function to initiate data ingest.
@@ -84,7 +94,7 @@ class DataIngestion:
         logging.info("Function to ingest data has started.")
 
         try:
-            config_dict = vars(self.ingestion_config)
+            config_dict = vars(self.raw_ingestion_config)
 
             all_dataframes = {}
 
@@ -106,7 +116,9 @@ class DataIngestion:
         logging.info("Function to load sql db and save as csv has started.")
 
         try:
-            load_dotenv(dotenv_path=self.sql_ingestion_config.env_sql_config_path)
+            load_dotenv(
+                dotenv_path=self.classification_ingestion_config.env_sql_config_path
+            )
             conn = mysql.connector.connect(
                 host="localhost",
                 user=os.getenv("MYSQL_USER"),
@@ -118,7 +130,7 @@ class DataIngestion:
                 "SELECT customer_unique_id, y_repeat_90d FROM customer_label", conn
             )
             df.to_csv(
-                self.sql_ingestion_config.customer_label_data_path,
+                self.classification_ingestion_config.customer_label_data_path,
                 index=False,
                 sep=",",
                 quotechar='"',
@@ -137,27 +149,29 @@ class DataIngestion:
     def initiate_classification_data_ingestion_agumentation_merging(
         self,
     ) -> pd.DataFrame:
-        """Function to initiate sql data ingestion, agumentation and merging.
+        """Function to initiate classification data ingestion, agumentation and merging.
 
         Returns:
-            pd.DataFrame: DataFrame of merged sql csv files.
+            pd.DataFrame: DataFrame of merged classification csv files.
         """
 
-        logging.info("Function to ingest sql data has started.")
+        logging.info("Function to ingest classification data has started.")
 
         try:
-            first_order = pd.read_csv(self.sql_ingestion_config.first_order_data_path)
+            first_order = pd.read_csv(
+                self.classification_ingestion_config.first_order_data_path
+            )
             first_order_items = pd.read_csv(
-                self.sql_ingestion_config.first_order_items_data_path
+                self.classification_ingestion_config.first_order_items_data_path
             )
             first_order_payment = pd.read_csv(
-                self.sql_ingestion_config.first_order_payment_data_path
+                self.classification_ingestion_config.first_order_payment_data_path
             )
             first_order_customer = pd.read_csv(
-                self.sql_ingestion_config.first_order_customer_data_path
+                self.classification_ingestion_config.first_order_customer_data_path
             )
             customer_label = pd.read_csv(
-                self.sql_ingestion_config.customer_label_data_path
+                self.classification_ingestion_config.customer_label_data_path
             )
 
             df = (
@@ -212,7 +226,7 @@ class DataIngestion:
             ].apply(lambda x: x if x in top_20 else "others")
 
             df.to_csv(
-                self.sql_ingestion_config.customer_classification_features_data_path,
+                self.classification_ingestion_config.customer_classification_features_data_path,
                 index=False,
                 sep=",",
                 decimal=".",
@@ -222,5 +236,30 @@ class DataIngestion:
             return df
 
         except Exception as e:
-            logging.info("Function to ingest sql data has encountered a problem.")
+            logging.info(
+                "Function to ingest classification data has encountered a problem."
+            )
+            raise CustomException(e, sys) from e
+
+    def initiate_forecasting_data_ingestion(
+        self,
+    ) -> pd.DataFrame:
+        """Function to initiate forecasting data ingestion.
+
+        Returns:
+            pd.DataFrame: DataFrame of forecasting csv file.
+        """
+
+        logging.info("Function to ingest forecasting data has started.")
+
+        try:
+            df = pd.read_csv(
+                self.forecasting_ingestion_config.forecasting_data_path, sep=","
+            )
+            return df
+
+        except Exception as e:
+            logging.info(
+                "Function to ingest forecasting data has encountered a problem."
+            )
             raise CustomException(e, sys) from e
