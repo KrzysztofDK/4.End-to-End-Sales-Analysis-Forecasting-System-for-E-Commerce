@@ -40,5 +40,5 @@ UNION ALL
 SELECT review_id, text_pt, label
 FROM v_sentiment_reviews
 INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/sentiment_analysis_bertimbau.csv'
-FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '\\'
 LINES TERMINATED BY '\n';
