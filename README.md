@@ -37,6 +37,11 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - openpyxl
 - imblearn
 - prophet
+- torch
+- datasets
+- evaluate
+- accelerate
+- transformers>=4.42
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**

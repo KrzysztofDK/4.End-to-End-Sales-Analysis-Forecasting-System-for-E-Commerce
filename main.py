@@ -16,18 +16,19 @@ def main():
     logging.info("Main program has started.")
 
     loader = DataIngestion()
-    # raw_datasets_dict = loader.initiate_raw_data_ingestion()
 
-    # cleaning_config_path = os.path.join("configs", "raw_data_cleaning_config.yaml")
-    # with open(cleaning_config_path, "r") as file:
-    #     cleaning_configs = yaml.safe_load(file)
+    raw_datasets_dict = loader.initiate_raw_data_ingestion()
 
-    # cleaned_dataframes = {}
+    cleaning_config_path = os.path.join("configs", "raw_data_cleaning_config.yaml")
+    with open(cleaning_config_path, "r") as file:
+        cleaning_configs = yaml.safe_load(file)
 
-    # for name, df in raw_datasets_dict.items():
-    #     config = cleaning_configs.get(name, {})
-    #     cleaning = DataCleaning(df=df, filename=name, cleaning_config=config)
-    #     cleaned_dataframes[name] = cleaning.run_all_cleaning_functions_and_save()
+    cleaned_dataframes = {}
+
+    for name, df in raw_datasets_dict.items():
+        config = cleaning_configs.get(name, {})
+        cleaning = DataCleaning(df=df, filename=name, cleaning_config=config)
+        cleaned_dataframes[name] = cleaning.run_all_cleaning_functions_and_save()
 
     # loader.load_classification_data_save_to_csv()
 
@@ -72,49 +73,51 @@ def main():
     # )
 
     # model_path = os.path.join("models", "classification_ann_model.h5")
-    excel_path = os.path.join("reports", "models_evaluations.xlsx")
+    # excel_path = os.path.join("reports", "models_evaluations.xlsx")
 
     # evaluator = ModelEvaluator(model_path, excel_path)
     # evaluator.find_best_threshold(X_val, y_val)
     # evaluator.evaluate_model(X_test, y_test)
 
-    forecasting_df = loader.initiate_forecasting_data_ingestion()
+    # forecasting_df = loader.initiate_forecasting_data_ingestion()
 
-    cleaning_config_path = os.path.join(
-        "configs", "forecasting_data_cleaning_config.yaml"
-    )
-    with open(cleaning_config_path, "r") as file:
-        cleaning_configs = yaml.safe_load(file)
+    # cleaning_config_path = os.path.join(
+    #     "configs", "forecasting_data_cleaning_config.yaml"
+    # )
+    # with open(cleaning_config_path, "r") as file:
+    #     cleaning_configs = yaml.safe_load(file)
 
-    df_name = "forecasting_daily_revenue"
-    config = cleaning_configs.get(df_name, {})
-    forecasting_cleaning = DataCleaning(
-        df=forecasting_df,
-        filename=df_name,
-        cleaning_config=config,
-    )
-    cleaned_forecasting_df = forecasting_cleaning.run_all_cleaning_functions_and_save()
+    # df_name = "forecasting_daily_revenue"
+    # config = cleaning_configs.get(df_name, {})
+    # forecasting_cleaning = DataCleaning(
+    #     df=forecasting_df,
+    #     filename=df_name,
+    #     cleaning_config=config,
+    # )
+    # cleaned_forecasting_df = forecasting_cleaning.run_all_cleaning_functions_and_save()
 
-    prophet_model = ProphetModel().get_model()
-    prophet_trainer = ProphetTrainer(model=prophet_model)
-    X_test, y_test = prophet_trainer.fit_split_save_test_model(
-        cleaned_forecasting_df, test_size=30
-    )
+    # prophet_model = ProphetModel().get_model()
+    # prophet_trainer = ProphetTrainer(model=prophet_model)
+    # X_test, y_test = prophet_trainer.fit_split_save_test_model(
+    #     cleaned_forecasting_df, test_size=30
+    # )
 
-    model_path = os.path.join("models", "forecasting_prophet_splited_model.pkl")
-    evaluator = ModelEvaluator(model_path, excel_path)
-    evaluator.evaluate_model(X_test, y_test)
+    # model_path = os.path.join("models", "forecasting_prophet_splited_model.pkl")
+    # evaluator = ModelEvaluator(model_path, excel_path)
+    # evaluator.evaluate_model(X_test, y_test)
 
-    prophet_model_final = ProphetModel().get_model()
-    prophet_trainer_final = ProphetTrainer(model=prophet_model_final)
-    prophet_model_final = prophet_trainer_final.fit_save_final_model(
-        cleaned_forecasting_df
-    )
+    # prophet_model_final = ProphetModel().get_model()
+    # prophet_trainer_final = ProphetTrainer(model=prophet_model_final)
+    # prophet_model_final = prophet_trainer_final.fit_save_final_model(
+    #     cleaned_forecasting_df
+    # )
 
-    future = prophet_model_final.make_future_dataframe(periods=30, freq="D")
-    forecast = prophet_model_final.predict(future)
+    # future = prophet_model_final.make_future_dataframe(periods=30, freq="D")
+    # forecast = prophet_model_final.predict(future)
 
-    print(forecast.tail(30))
+    # print(forecast.tail(30))
+
+    # sentiment_df = loader
 
     logging.info("Main program ended.")
 

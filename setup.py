@@ -24,7 +24,7 @@ def get_requirements(file_path: str) -> List[str]:
 
 setup(
     name="4.End-to-End Smart Sales Analysis & Forecasting System for E-Commerce",
-    version="0.4.0",
+    version="0.8.3",
     author="KrzysztofDK",
     author_email="krzysztof.d.kopytowski@gmail.com",
     packages=find_packages(),

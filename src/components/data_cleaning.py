@@ -2,6 +2,8 @@
 
 import sys
 import os
+import csv
+import re
 from typing import Type
 
 import pandas as pd
@@ -154,7 +156,31 @@ class DataCleaning:
         cleaned_df_path = os.path.join(
             "artifacts", "cleaned_data", f"{self.filename}.csv"
         )
-        if self.filename == "order_reviews":
+
+        if self.filename == "forecasting_daily_revenue":
+            self.df.to_csv(
+                cleaned_df_path,
+                index=False,
+                sep=";",
+                decimal=",",
+                date_format="%Y-%m-%d",
+                lineterminator="\n",
+            )
+        elif self.filename == "order_reviews":
+            self.df["review_comment_message"] = (
+                self.df["review_comment_message"]
+                .astype(str)
+                .apply(lambda x: re.sub(r"[\r\n]+", " ", x).strip())
+            )
+
+            self.df.to_csv(
+                cleaned_df_path,
+                index=False,
+                quoting=csv.QUOTE_ALL,
+                encoding="utf-8",
+                date_format="%Y-%m-%d %H:%M:%S",
+            )
+
             self.df = self.df.drop(
                 ["review_comment_title", "review_comment_message"], axis=1
             )
@@ -171,16 +197,6 @@ class DataCleaning:
                 date_format="%Y-%m-%d %H:%M:%S",
                 lineterminator="\n",
             )
-
-        if self.filename == "forecasting_daily_revenue":
-            self.df.to_csv(
-                cleaned_df_path,
-                index=False,
-                sep=";",
-                decimal=",",
-                date_format="%Y-%m-%d",
-                lineterminator="\n",
-            )
         else:
             self.df.to_csv(
                 cleaned_df_path,
@@ -190,6 +206,7 @@ class DataCleaning:
                 date_format="%Y-%m-%d %H:%M:%S",
                 lineterminator="\n",
             )
+
         logging.info(f"Cleaned DataFrame saved to {cleaned_df_path}")
 
         return self.df

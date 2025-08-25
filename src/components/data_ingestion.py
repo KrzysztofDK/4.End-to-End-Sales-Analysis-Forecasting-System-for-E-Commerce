@@ -84,9 +84,6 @@ class DataIngestion:
     def initiate_raw_data_ingestion(self) -> dict:
         """Function to initiate data ingest.
 
-        Raises:
-            CustomException
-
         Returns:
             dict: Dictionary of ingested data as pd.DataFrame.
         """

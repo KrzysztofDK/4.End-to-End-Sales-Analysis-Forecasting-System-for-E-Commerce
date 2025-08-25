@@ -29,6 +29,7 @@ order_reviews:
     - review_score
     - review_creation_date
     - review_answer_timestamp
+    - review_comment_message
 
 orders:
   convert_columns:
