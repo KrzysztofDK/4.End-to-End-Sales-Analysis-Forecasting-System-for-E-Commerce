@@ -2,7 +2,7 @@
 Stack: Python, Pandas, SQL, ML, ANN/LSTM, Power BI, Streamlit, GitHub, Docker.
 
 ## 🧠 About the Project
-The project's goal is to create an intelligent sales analysis and forecasting system for an e-commerce platform that allows for the analysis of customer data, product ratings, and sales trends. The system provides a user interface for prediction, customer classification, and sentiment analysis based on transaction data and reviews.
+The project's goal is to create sales analysis and forecasting system for an e-commerce platform that allows for the analysis of customer classification, review sentiment analysis and forecasting sales trends. The program provides a user interface for prediction in streamlit app.
 
 ## 📁 Dataset
 Dataset taken from Kaggle -> https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
@@ -18,7 +18,7 @@ After a customer purchases the product from Olist Store a seller gets notified t
 
 Data Schema avaible in artifacts/images folder as data_schema.png.
 
-## ⚙️ Technologies Used (in progress)
+## ⚙️ Technologies Used
 - Python 3.10
 - Jupyter Notebook
 - VS Code
