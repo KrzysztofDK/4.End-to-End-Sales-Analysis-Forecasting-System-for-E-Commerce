@@ -4,7 +4,6 @@ import sys
 import os
 
 import pandas as pd
-import joblib
 
 import torch
 from sklearn.model_selection import train_test_split
@@ -17,6 +16,26 @@ from transformers import AutoTokenizer
 
 from src.logger import logging
 from src.exception import CustomException
+
+
+def prepare_text_df(sentiment_df: pd.DataFrame) -> pd.DataFrame:
+    """Prepare sentiment dataframe for model training.
+
+    Args:
+        sentiment_df (pd.DataFrame): Input dataframe containing 'text_pt' and 'label' columns.
+
+    Returns:
+        pd.DataFrame: Cleaned dataframe with:
+            - text_pt : str (processed text without extra spaces)
+            - label : int (converted to integer type)
+    """
+    df = sentiment_df[["text_pt", "label"]].copy()
+    df["text_pt"] = (
+        df["text_pt"].astype(str).str.replace(r"\s+", " ", regex=True).str.strip()
+    )
+    df = df.replace({"text_pt": {"": pd.NA}}).dropna(subset=["text_pt", "label"])
+    df["label"] = df["label"].astype(int)
+    return df
 
 
 class Preprocessor:
@@ -104,11 +123,6 @@ class Preprocessor:
             X_train_transformed = self.preprocessor.fit_transform(X_train)
             X_val_transformed = self.preprocessor.transform(X_val)
             X_test_transformed = self.preprocessor.transform(X_test)
-
-            preprocessor_path = os.path.join(
-                "models", "classification_ann_preprocessor.pkl"
-            )
-            joblib.dump(self.preprocessor, preprocessor_path)
 
             cat_encoder = self.preprocessor.named_transformers_["cat"]["onehot"]
             n_num_features = len(self.numeric_features)
@@ -299,23 +313,3 @@ class TextPreprocessor:
         test_loader = DataLoader(test_dataset, batch_size=batch_size)
 
         return train_loader, val_loader, test_loader, self.tokenizer
-
-
-def prepare_text_df(sentiment_df: pd.DataFrame) -> pd.DataFrame:
-    """Prepare sentiment dataframe for model training.
-
-    Args:
-        sentiment_df (pd.DataFrame): Input dataframe containing 'text_pt' and 'label' columns.
-
-    Returns:
-        pd.DataFrame: Cleaned dataframe with:
-            - text_pt : str (processed text without extra spaces)
-            - label : int (converted to integer type)
-    """
-    df = sentiment_df[["text_pt", "label"]].copy()
-    df["text_pt"] = (
-        df["text_pt"].astype(str).str.replace(r"\s+", " ", regex=True).str.strip()
-    )
-    df = df.replace({"text_pt": {"": pd.NA}}).dropna(subset=["text_pt", "label"])
-    df["label"] = df["label"].astype(int)
-    return df

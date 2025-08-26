@@ -14,7 +14,7 @@ from prophet import Prophet
 
 from src.logger import logging
 from src.exception import CustomException
-from src.components.model_creation import ANNModel, BertSentimentClassifier
+from src.components.model_creation import ANNModel, BertModel
 
 
 class ANNTrainer:
@@ -194,11 +194,11 @@ class BertTrainer:
     Trainer class for fine-tuning, validating, and saving BERT sentiment analysis models.
     """
 
-    def __init__(self, model: BertSentimentClassifier, device: torch.device):
+    def __init__(self, model: BertModel, device: torch.device):
         """Initialize the BERT trainer with a model and device.
 
         Args:
-            model (BertSentimentClassifier): Instance of BERT sentiment classifier.
+            model (BertModel): Instance of BERT sentiment classifier.
             device (torch.device, optional): Device to use ("cuda" or "cpu").
                 If None, automatically detects GPU if available. Defaults to None.
         """
@@ -253,7 +253,7 @@ class BertTrainer:
                     outputs = self.model(
                         input_ids=input_ids, attention_mask=attention_mask
                     )
-                    loss = criterion(outputs, labels)
+                    loss = criterion(outputs.logits, labels)
                     loss.backward()
                     optimizer.step()
                     scheduler.step()
@@ -274,7 +274,7 @@ class BertTrainer:
                         outputs = self.model(
                             input_ids=input_ids, attention_mask=attention_mask
                         )
-                        loss = criterion(outputs, labels)
+                        loss = criterion(outputs.logits, labels)
                         val_loss += loss.item()
 
                 avg_val_loss = val_loss / len(val_loader)

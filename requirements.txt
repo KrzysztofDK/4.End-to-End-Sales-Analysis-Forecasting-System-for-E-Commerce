@@ -8,6 +8,7 @@ pyyaml
 mysql-connector-python
 python-dotenv
 tensorflow
+keras_tuner
 openpyxl
 imblearn
 prophet

@@ -109,7 +109,7 @@ class ProphetModel:
         return self.model
 
 
-class BertSentimentClassifier(nn.Module):
+class BertModel(nn.Module):
     """BERT-based sentiment classifier using BERTimbau."""
 
     def __init__(
@@ -117,13 +117,13 @@ class BertSentimentClassifier(nn.Module):
         pretrained_model_name: str = "neuralmind/bert-base-portuguese-cased",
         num_labels: int = 3,
     ) -> None:
-        """Initialize BertSentimentClassifier.
+        """Initialize BertModel.
 
         Args:
             pretrained_model_name (str, optional): Name of the pretrained HuggingFace model. Defaults to "neuralmind/bert-base-portuguese-cased".
             num_labels (int, optional): Number of sentiment classes. Defaults to 3 (negative, neutral, positive).
         """
-        super(BertSentimentClassifier, self).__init__()
+        super(BertModel, self).__init__()
 
         self.id2label = {0: "negative", 1: "neutral", 2: "positive"}
         self.label2id = {v: k for k, v in self.id2label.items()}

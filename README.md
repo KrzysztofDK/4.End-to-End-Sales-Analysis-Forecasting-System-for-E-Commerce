@@ -34,6 +34,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - mysql-connector-python
 - python-dotenv
 - tensorflow
+- keras_tuner
 - openpyxl
 - imblearn
 - prophet
@@ -59,21 +60,22 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - Whether a new customer will make a second purchase within 90 days of their first transaction or not (binary),
 - SQL code avaible in SQL/binary_classification.sql and data_ingestion.py files,
 - EDA avaible in the notebook/classification_EDA.ipynb file,
-- EDA conclusions avaible in the reports/classification_EDA_conclusions.md file.
+- EDA conclusions avaible in the reports/classification_EDA_conclusions.md file,
+- forecast for 30, 60 and 90 days avaible as csv and png in the reports/ folder.
 
 6. **Revenue per day forecasting - 30 days ahead (Prophet)**
 - SQL code avaible in SQL/forecasting.sql file,
 - EDA avaible in the notebook/forecasting_EDA.ipynb file,
 - EDA conclusions avaible in the reports/forecasting_EDA_conclusions.md file.
 
-7. **Sentiment analysis (BERTimbau)** (in progress)
+7. **Sentiment analysis (BERTimbau)**
 - SQL code avaible in SQL/sentiment_analysis_bertimbau.sql file,
 - EDA avaible in the notebook/sentiment_analysis_EDA.ipynb file,
 - EDA conclusions avaible in the reports/sentiment_analysis_EDA_conclusions.md file.
 
-8. **Streamlit: A Simple Prediction App**
+8. **Streamlit: A Simple Prediction App** (in progress)
 
-## Final conclusions avaible in the reports/final_conclusions.md file
+## Final conclusions avaible in the reports/final_conclusions.md file (in progress)
 
 🧑‍💼 Author: Krzysztof Kopytowski
 📎 LinkedIn: https://www.linkedin.com/in/krzysztof-kopytowski-74964516a/

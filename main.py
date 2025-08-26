@@ -6,9 +6,15 @@ Main script to run machine learning pipelines:
 """
 
 import os
+
+os.environ["OMP_NUM_THREADS"] = "24"
+os.environ["MKL_NUM_THREADS"] = "24"
 import sys
 import yaml
 import torch
+
+torch.set_num_threads(os.cpu_count())  # 24 for i7-13700KF
+torch.set_num_interop_threads(2)
 
 from src.logger import logging
 from src.exception import CustomException
@@ -22,7 +28,7 @@ from src.components.preprocessing import (
 from src.components.model_creation import (
     ANNModel,
     ProphetModel,
-    BertSentimentClassifier,
+    BertModel,
 )
 from src.components.model_training import (
     ANNTrainer,
@@ -30,6 +36,7 @@ from src.components.model_training import (
     BertTrainer,
 )
 from src.components.model_evaluation import ModelEvaluator
+from src.utils import save_forecast_and_plot
 
 
 def run_raw_data_basic_cleaning(loader: DataIngestion) -> None:
@@ -160,10 +167,11 @@ def run_prophet_pipeline(loader: DataIngestion, excel_path: str) -> None:
         cleaned_forecasting_df
     )
 
-    future = prophet_model_final.make_future_dataframe(periods=30, freq="D")
-    forecast = prophet_model_final.predict(future)
-
-    print(forecast.tail(30))
+    save_forecast_and_plot(
+        prophet_model=prophet_model_final,
+        history_df=cleaned_forecasting_df,
+        periods_list=[30, 60, 90],
+    )
 
     logging.info("Prophet pipeline has finished.")
 
@@ -191,7 +199,7 @@ def run_bert_pipeline(loader: DataIngestion, excel_path: str) -> None:
         text_preprocessor.create_datasets(batch_size=16)
     )
 
-    bert_model = BertSentimentClassifier(num_labels=3)
+    bert_model = BertModel(num_labels=3)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     bert_model = bert_model.to(device)
