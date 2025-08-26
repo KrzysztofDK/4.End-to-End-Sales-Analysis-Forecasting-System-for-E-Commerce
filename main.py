@@ -236,9 +236,9 @@ def main():
         loader = DataIngestion()
         excel_path = os.path.join("reports", "models_evaluations.xlsx")
 
-        run_raw_data_basic_cleaning(loader=loader)
-        run_ann_pipeline(loader=loader, excel_path=excel_path)
-        run_prophet_pipeline(loader=loader, excel_path=excel_path)
+        # run_raw_data_basic_cleaning(loader=loader)
+        # run_ann_pipeline(loader=loader, excel_path=excel_path)
+        # run_prophet_pipeline(loader=loader, excel_path=excel_path)
         run_bert_pipeline(loader=loader, excel_path=excel_path)
 
         logging.info("Main program ended.")

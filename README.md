@@ -73,9 +73,10 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - EDA avaible in the notebook/sentiment_analysis_EDA.ipynb file,
 - EDA conclusions avaible in the reports/sentiment_analysis_EDA_conclusions.md file.
 
-8. **Streamlit: A Simple Prediction App** (in progress)
+8. **Streamlit: A Simple Prediction App**
+- run by; streamlit run app/streamlit_app.py
 
-## Final conclusions avaible in the reports/final_conclusions.md file (in progress)
+## Final conclusions avaible in the reports/final_conclusions.md file
 
 🧑‍💼 Author: Krzysztof Kopytowski
 📎 LinkedIn: https://www.linkedin.com/in/krzysztof-kopytowski-74964516a/
