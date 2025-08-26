@@ -1,4 +1,4 @@
-# 📊 4.End-to-End Smart Sales Analysis & Forecasting System for E-Commerce
+# 📊 4.End-to-End Sales Analysis & Forecasting System for E-Commerce
 Stack: Python, Pandas, SQL, ML, ANN/LSTM, Power BI, Streamlit, GitHub, Docker.
 
 ## 🧠 About the Project
@@ -38,10 +38,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - imblearn
 - prophet
 - torch
-- datasets
-- evaluate
-- accelerate
-- transformers>=4.42
+- transformers
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**

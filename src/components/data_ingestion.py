@@ -73,6 +73,15 @@ class ForecastingDataIngestionConfig:
     )
 
 
+@dataclass
+class SentimentDataIngestionConfig:
+    """Config class with paths to sentiment data file."""
+
+    sentiment_data_path: str = os.path.join(
+        "SQL", "data", "sentiment_analysis_bertimbau.csv"
+    )
+
+
 class DataIngestion:
     """Class to ingest data."""
 
@@ -80,6 +89,7 @@ class DataIngestion:
         self.raw_ingestion_config = RawDataIngestionConfig()
         self.classification_ingestion_config = ClassificationDataIngestionConfig()
         self.forecasting_ingestion_config = ForecastingDataIngestionConfig()
+        self.sentiment_ingestion_config = SentimentDataIngestionConfig()
 
     def initiate_raw_data_ingestion(self) -> dict:
         """Function to initiate data ingest.
@@ -264,4 +274,28 @@ class DataIngestion:
             logging.info(
                 "Function to ingest forecasting data has encountered a problem."
             )
+            raise CustomException(e, sys) from e
+
+    def initiate_sentiment_data_ingestion(
+        self,
+    ) -> pd.DataFrame:
+        """Function to initiate sentiment data ingestion.
+
+        Returns:
+            pd.DataFrame: DataFrame of sentiment csv file.
+        """
+
+        logging.info("Function to ingest sentiment data has started.")
+
+        try:
+            df = pd.read_csv(
+                self.sentiment_ingestion_config.sentiment_data_path,
+                sep=",",
+                quotechar='"',
+                escapechar="\\",
+            )
+            return df
+
+        except Exception as e:
+            logging.info("Function to ingest sentiment data has encountered a problem.")
             raise CustomException(e, sys) from e

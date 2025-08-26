@@ -1,5 +1,8 @@
 """Module to create models"""
 
+import torch
+import torch.nn as nn
+from transformers import AutoModelForSequenceClassification, AutoConfig
 from keras import layers, models, optimizers
 from keras.losses import BinaryFocalCrossentropy
 from prophet import Prophet
@@ -104,3 +107,58 @@ class ProphetModel:
         """
 
         return self.model
+
+
+class BertSentimentClassifier(nn.Module):
+    """BERT-based sentiment classifier using BERTimbau."""
+
+    def __init__(
+        self,
+        pretrained_model_name: str = "neuralmind/bert-base-portuguese-cased",
+        num_labels: int = 3,
+    ) -> None:
+        """Initialize BertSentimentClassifier.
+
+        Args:
+            pretrained_model_name (str, optional): Name of the pretrained HuggingFace model. Defaults to "neuralmind/bert-base-portuguese-cased".
+            num_labels (int, optional): Number of sentiment classes. Defaults to 3 (negative, neutral, positive).
+        """
+        super(BertSentimentClassifier, self).__init__()
+
+        self.id2label = {0: "negative", 1: "neutral", 2: "positive"}
+        self.label2id = {v: k for k, v in self.id2label.items()}
+
+        self.config = AutoConfig.from_pretrained(
+            pretrained_model_name,
+            num_labels=num_labels,
+            id2label=self.id2label,
+            label2id=self.label2id,
+        )
+
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            pretrained_model_name, config=self.config
+        )
+
+    def forward(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor,
+        labels: torch.Tensor | None = None,
+    ) -> dict:
+        """Forward pass through the model.
+
+        Args:
+            input_ids (torch.Tensor): Tensor of token IDs with shape (batch_size, sequence_length).
+            attention_mask (torch.Tensor): Tensor indicating padded elements (1 = real token, 0 = padding).
+            labels (torch.Tensor | None, optional): Tensor of ground-truth labels with shape (batch_size,). Defaults to None.
+
+        Returns:
+            dict: Dictionary containing:
+                - loss (torch.Tensor, optional): Training loss if labels provided.
+                - logits (torch.Tensor): Raw output logits of shape (batch_size, num_labels).
+        """
+        return self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            labels=labels,
+        )

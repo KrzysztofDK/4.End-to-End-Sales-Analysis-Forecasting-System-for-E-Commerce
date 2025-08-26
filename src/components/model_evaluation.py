@@ -2,6 +2,7 @@
 
 import os
 import sys
+from typing import Optional, Union
 
 import keras
 import joblib
@@ -24,26 +25,41 @@ class ModelEvaluator:
 
     _excel_cleared = False
 
-    def __init__(self, model_path: str, excel_path: str):
+    def __init__(
+        self,
+        model_path: str,
+        excel_path: str,
+        model: Optional[object] = None,
+        device: Optional[object] = None,
+    ):
         """Initialize ModelEvaluator.
 
         Args:
-            model_path (str): Location of model to evaluate.
-            excel_path (str): Location to wrire excel file with metrics.
+            model_path (str): Path to the model file (.h5 for ANN, .pkl for Prophet).
+            excel_path (str): Path where Excel with metrics will be saved.
+            model (object, optional): Already loaded model.
+            device (object, optional): Torch device for BERT.
         """
         self.model_path = model_path
         self.excel_path = excel_path
-        self.model_name = os.path.splitext(os.path.basename(model_path))[0]
         self.best_threshold = 0.5
+        self.device = device
 
         try:
-            if model_path.endswith(".h5"):
+            if model is not None:
+                self.model_type = "bert"
+                self.model = model
+                self.model_name = "bert_sentiment"
+            elif model_path.endswith(".h5"):
                 self.model_type = "ann"
                 self.model = keras.models.load_model(model_path)
+                self.model_name = os.path.splitext(os.path.basename(model_path))[0]
             elif model_path.endswith(".pkl"):
                 self.model_type = "prophet"
                 self.model = joblib.load(model_path)
-
+                self.model_name = os.path.splitext(os.path.basename(model_path))[0]
+            else:
+                raise ValueError("Unsupported model type or missing model.")
         except Exception as e:
             logging.info("Initializing ModelEvaluator has failed.")
             raise CustomException(e, sys) from e
@@ -53,12 +69,14 @@ class ModelEvaluator:
                 os.remove(excel_path)
             ModelEvaluator._excel_cleared = True
 
-    def find_best_threshold(self, X_val: np.ndarray, y_val: np.ndarray = None) -> None:
+    def find_best_threshold(
+        self, X_val: np.ndarray, y_val: Optional[np.ndarray] = None
+    ) -> None:
         """Find best threshold based on F1 score from validation set.
 
         Args:
             X_val (np.ndarray): Validation features
-            y_val (np.ndarray): Validation labels
+            y_val (np.ndarray, optional): Validation labels. Required for ANN.
         """
 
         logging.info("Function to find best threshold has started.")
@@ -73,12 +91,21 @@ class ModelEvaluator:
 
         logging.info(f"Best threshold found: {self.best_threshold:.4f}")
 
-    def evaluate_model(self, X_test, y_test) -> None:
-        """Evaluate model depending on its type (ANN or Prophet).
+    def evaluate_model(
+        self,
+        X_test: Optional[Union[np.ndarray, pd.DataFrame]] = None,
+        y_test: Optional[Union[np.ndarray, pd.Series]] = None,
+        dataloader: Optional[object] = None,
+    ) -> None:
+        """Evaluate model depending on its type (ANN, Prophet or BERT).
 
         Args:
-            X_test: np.ndarray (for ANN) or pd.DataFrame (for Prophet)
-            y_test: np.ndarray (for ANN) or pd.Series (for Prophet)
+            X_test : np.ndarray or pd.DataFrame, optional
+                Test features. Required for ANN (np.ndarray) and Prophet (pd.DataFrame).
+            y_test : np.ndarray or pd.Series, optional
+                Test labels. Required for ANN (np.ndarray) and Prophet (pd.Series).
+            dataloader : object, optional
+                Torch DataLoader for BERT evaluation.
         """
 
         logging.info("Function to evaluate model has started.")
@@ -117,29 +144,35 @@ class ModelEvaluator:
                     index=["metrics"],
                 )
 
-            header = pd.DataFrame(
-                [[f"Model: {self.model_name}"]], columns=["classification_report"]
-            )
+            elif self.model_type == "bert":
+                import torch
 
-            if os.path.exists(self.excel_path):
-                with pd.ExcelWriter(
-                    self.excel_path,
-                    engine="openpyxl",
-                    mode="a",
-                    if_sheet_exists="overlay",
-                ) as writer:
-                    existing = pd.read_excel(
-                        self.excel_path, sheet_name="Sheet1", header=None
-                    )
-                    startrow = len(existing) + 2
-                    header.to_excel(
-                        writer, startrow=startrow, index=False, header=False
-                    )
-                    df_report.to_excel(writer, startrow=startrow + 2)
-            else:
-                with pd.ExcelWriter(self.excel_path, engine="openpyxl") as writer:
-                    header.to_excel(writer, startrow=0, index=False, header=False)
-                    df_report.to_excel(writer, startrow=2)
+                self.model.eval()
+                all_preds, all_labels = [], []
+
+                with torch.no_grad():
+                    for batch in dataloader:
+                        input_ids = batch["input_ids"].to(self.device)
+                        attention_mask = batch["attention_mask"].to(self.device)
+                        labels = batch["labels"].cpu().numpy()
+
+                        outputs = self.model(
+                            input_ids=input_ids, attention_mask=attention_mask
+                        )
+                        preds = torch.argmax(outputs.logits, dim=1).cpu().numpy()
+
+                        all_preds.extend(preds)
+                        all_labels.extend(labels)
+
+                report = classification_report(all_labels, all_preds, output_dict=True)
+                df_report = pd.DataFrame(report).transpose()
+
+            with pd.ExcelWriter(
+                self.excel_path,
+                engine="openpyxl",
+                mode="a" if os.path.exists(self.excel_path) else "w",
+            ) as writer:
+                df_report.to_excel(writer, sheet_name=self.model_name)
 
         except Exception as e:
             logging.info("Function to evaluate model has encountered a problem.")

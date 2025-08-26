@@ -12,8 +12,5 @@ openpyxl
 imblearn
 prophet
 torch
-datsets
-evaluate
-accelerate
 transformers>=4.42
 -e .
