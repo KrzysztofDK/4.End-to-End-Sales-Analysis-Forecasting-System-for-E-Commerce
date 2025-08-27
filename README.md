@@ -30,6 +30,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - Seaborn
 - scikit-learn
 - Streamlit
+- joblib
 - pyyaml
 - mysql-connector-python
 - python-dotenv

@@ -4,6 +4,7 @@ matplotlib
 seaborn
 scikit-learn
 streamlit
+joblib
 pyyaml
 mysql-connector-python
 python-dotenv
