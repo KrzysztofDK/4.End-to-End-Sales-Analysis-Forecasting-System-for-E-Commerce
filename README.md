@@ -76,11 +76,11 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - EDA conclusions avaible in the reports/sentiment_analysis_EDA_conclusions.md file.
 
 ### Installing PyTorch with GPU
-This project requires PyTorch with GPU support.
-Select the appropriate CUDA version according to the command output:
-```bash```
-nvidia-smi
-in my case it is CUDA 12.9 so at the end of the line I have supported cu121 (adjust to yourself)
+This project requires PyTorch with GPU support.  
+Select the appropriate CUDA version according to the command output:  
+```bash```  
+nvidia-smi  
+in my case it is CUDA 12.9 so at the end of the line I have supported cu121 (adjust to yourself)  
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 8. **Streamlit: A Simple Prediction App**
