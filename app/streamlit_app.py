@@ -45,7 +45,7 @@ def load_features():
 
 @st.cache_resource
 def load_bert():
-    model = BertModel(num_labels=4)
+    model = BertModel(num_labels=3)
     state_dict = torch.load(BERT_FILE, map_location="cpu")
     model.load_state_dict(state_dict)
     model.eval()
