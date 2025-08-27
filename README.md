@@ -76,6 +76,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 
 8. **Streamlit: A Simple Prediction App**
 - run by; streamlit run app/streamlit_app.py
+- or go to https://annkeras-prophet-bertimabu.streamlit.app/
 
 ## Final conclusions avaible in the reports/final_conclusions.md file
 
