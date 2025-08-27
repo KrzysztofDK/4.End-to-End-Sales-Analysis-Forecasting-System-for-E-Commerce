@@ -33,6 +33,9 @@ from src.components.model_training import (
 )
 from src.components.model_evaluation import ModelEvaluator
 from src.utils import save_forecast_and_plot
+from configs.gpu_setup import setup_tf_gpu
+
+setup_tf_gpu()
 
 
 def run_raw_data_basic_cleaning(loader: DataIngestion) -> None:
@@ -200,7 +203,8 @@ def run_bert_pipeline(loader: DataIngestion, excel_path: str) -> None:
 
     bert_model = BertModel(num_labels=3)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda")
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     bert_model = bert_model.to(device=device)
 
     optimizer = torch.optim.AdamW(bert_model.parameters(), lr=2e-5)

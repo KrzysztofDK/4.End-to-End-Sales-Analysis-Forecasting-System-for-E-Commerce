@@ -22,7 +22,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - Python 3.10
 - Jupyter Notebook
 - VS Code
-- SQL
+- MySQL
 - Power BI
 - Pandas
 - Numpy
@@ -35,9 +35,10 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - mysql-connector-python
 - python-dotenv
 - tensorflow
+- keras
 - keras_tuner
 - openpyxl
-- imblearn
+- imbalanced-learn
 - prophet
 - torch
 - transformers
@@ -73,6 +74,14 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - SQL code avaible in SQL/sentiment_analysis_bertimbau.sql file,
 - EDA avaible in the notebook/sentiment_analysis_EDA.ipynb file,
 - EDA conclusions avaible in the reports/sentiment_analysis_EDA_conclusions.md file.
+
+### Installing PyTorch with GPU
+This project requires PyTorch with GPU support.
+Select the appropriate CUDA version according to the command output:
+```bash```
+nvidia-smi
+in my case it is CUDA 12.9 so at the end of the line I have supported cu121 (adjust to yourself)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 8. **Streamlit: A Simple Prediction App**
 - run by; streamlit run app/streamlit_app.py
