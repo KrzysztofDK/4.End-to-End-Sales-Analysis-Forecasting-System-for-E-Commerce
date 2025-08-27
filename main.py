@@ -218,7 +218,14 @@ def run_bert_pipeline(loader: DataIngestion, excel_path: str) -> None:
         num_training_steps=num_training_steps,
     )
 
-    criterion = torch.nn.CrossEntropyLoss()
+    class_counts = torch.tensor([1032, 309, 2059], dtype=torch.float)
+    n_samples = class_counts.sum()
+    n_classes = len(class_counts)
+
+    weights = n_samples / (n_classes * class_counts)
+    weights = weights.to(device)
+
+    criterion = torch.nn.CrossEntropyLoss(weight=weights)
 
     bert_trainer = BertTrainer(model=bert_model, device=device)
     bert_trainer.train_and_save_bert_model(

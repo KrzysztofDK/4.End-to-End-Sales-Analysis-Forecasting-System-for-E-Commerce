@@ -136,7 +136,7 @@ class BertModel(nn.Module):
         )
 
         self.model = AutoModelForSequenceClassification.from_pretrained(
-            pretrained_model_name, config=self.config
+            pretrained_model_name, config=self.config, use_safetensors=True
         )
 
     def forward(

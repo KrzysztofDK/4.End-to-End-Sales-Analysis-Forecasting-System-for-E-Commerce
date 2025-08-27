@@ -63,8 +63,6 @@ class ANNTrainer:
         history_path (str, optional): File path where the training history
             (as dict) will be saved via joblib. Defaults to
             "models/classification_ann_history.pkl".
-        tuner_project (str, optional): Project name inside the tuner directory,
-            used to group related experiments. Defaults to "binary_classification".
         """
 
         logging.info("Function to train and save model has started.")
