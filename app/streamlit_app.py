@@ -23,7 +23,7 @@ ANN_PATH = "models/classification_ann_model.h5"
 PROPHET_PATH = "models/forecasting_prophet_model.pkl"
 FEATURES_PATH = os.path.join(os.path.dirname(__file__), "ann_feature_names.pkl")
 
-BERT_URL = "https://drive.google.com/drive/folders/1bk_66bDFMDmCXfzL-MwMKlioRrNgJl6m?usp=sharing"
+BERT_URL = "https://drive.google.com/uc?id=1ML2YqBtSgmZOG8Iq4VvJYOur4wiuyGtT"
 BERT_FILE = os.path.join("models", "sentiment_bert_model.pt")
 if not os.path.exists(BERT_FILE):
     gdown.download(BERT_URL, BERT_FILE, quiet=False)
