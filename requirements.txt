@@ -9,10 +9,10 @@ pyyaml
 mysql-connector-python
 python-dotenv
 tensorflow
-keras-tuner
+keras_tuner
 openpyxl
-imbalanced-learn
-prophet==1.1.5
-cmdstanpy
+imblearn
+prophet
 torch
 transformers>=4.42
+-e .
