@@ -42,6 +42,7 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 - prophet
 - torch
 - transformers
+- gdown
 
 ## 🧪 Steps Performed
 1. **Exploratory Data Analysis**
@@ -79,8 +80,8 @@ Data Schema avaible in artifacts/images folder as data_schema.png.
 This project requires PyTorch with GPU support.  
 Select the appropriate CUDA version according to the command output:  
 ```bash```  
-nvidia-smi  
-in my case it is CUDA 12.9 so at the end of the line I have supported cu121 (adjust to yourself)  
+nvidia-smi.
+In my case it is CUDA 12.9 so at the end of the line I have supported cu121 (adjust to yourself).
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 8. **Streamlit: A Simple Prediction App**

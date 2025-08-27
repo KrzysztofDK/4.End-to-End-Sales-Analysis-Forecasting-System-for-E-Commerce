@@ -8,6 +8,7 @@ from typing import List, Tuple, Optional
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+import gdown
 import streamlit as st
 import joblib
 import numpy as np
@@ -21,8 +22,11 @@ from src.components.model_creation import BertModel
 ANN_PATH = "models/classification_ann_model.h5"
 PROPHET_PATH = "models/forecasting_prophet_model.pkl"
 FEATURES_PATH = os.path.join(os.path.dirname(__file__), "ann_feature_names.pkl")
-BERT_PATH = "models/sentiment_bert_model.pt"
 
+BERT_URL = "https://drive.google.com/drive/folders/1bk_66bDFMDmCXfzL-MwMKlioRrNgJl6m?usp=sharing"
+BERT_FILE = os.path.join("models", "sentiment_bert_model.pt")
+if not os.path.exists(BERT_FILE):
+    gdown.download(BERT_URL, BERT_FILE, quiet=False)
 
 @st.cache_resource
 def load_ann():
@@ -41,8 +45,9 @@ def load_features():
 
 @st.cache_resource
 def load_bert():
-    model = BertModel(num_labels=3)
-    model.load_state_dict(torch.load(BERT_PATH, map_location="cpu"))
+    model = BertModel(num_labels=4)
+    state_dict = torch.load(BERT_FILE, map_location="cpu")
+    model.load_state_dict(state_dict)
     model.eval()
     tokenizer = AutoTokenizer.from_pretrained("neuralmind/bert-base-portuguese-cased")
     return model, tokenizer
