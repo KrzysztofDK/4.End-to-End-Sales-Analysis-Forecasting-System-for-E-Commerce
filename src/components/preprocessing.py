@@ -272,15 +272,15 @@ class TextPreprocessor:
         return train_df, val_df, test_df
 
     def create_datasets(
-        self, batch_size: int = 16
-    ) -> tuple[DataLoader, DataLoader, DataLoader, AutoTokenizer]:
+        self, batch_size: int = 32
+    ) -> tuple[DataLoader, DataLoader, DataLoader]:
         """Create PyTorch DataLoaders for train/val/test.
 
         Args:
             batch_size (int, optional): Number of samples per batch. Defaults to 16.
 
         Returns:
-            tuple[DataLoader, DataLoader, DataLoader, AutoTokenizer]: DataLoaders for train, validation, and test sets, and the tokenizer.
+            tuple[DataLoader, DataLoader, DataLoader]: DataLoaders for train, validation and test sets.
         """
         train_df, val_df, test_df = self.split_data()
 
@@ -307,8 +307,18 @@ class TextPreprocessor:
             max_len=self.max_len,
         )
 
-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_dataset, batch_size=batch_size)
-        test_loader = DataLoader(test_dataset, batch_size=batch_size)
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=4,
+            pin_memory=True,
+        )
+        val_loader = DataLoader(
+            val_dataset, batch_size=batch_size, num_workers=4, pin_memory=True
+        )
+        test_loader = DataLoader(
+            test_dataset, batch_size=batch_size, num_workers=4, pin_memory=True
+        )
 
-        return train_loader, val_loader, test_loader, self.tokenizer
+        return train_loader, val_loader, test_loader

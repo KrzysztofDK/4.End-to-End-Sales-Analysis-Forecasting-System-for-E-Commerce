@@ -6,15 +6,11 @@ Main script to run machine learning pipelines:
 """
 
 import os
-
-os.environ["OMP_NUM_THREADS"] = "24"
-os.environ["MKL_NUM_THREADS"] = "24"
 import sys
 import yaml
 import torch
 
-torch.set_num_threads(os.cpu_count())  # 24 for i7-13700KF
-torch.set_num_interop_threads(2)
+from transformers import get_linear_schedule_with_warmup
 
 from src.logger import logging
 from src.exception import CustomException
@@ -186,6 +182,9 @@ def run_bert_pipeline(loader: DataIngestion, excel_path: str) -> None:
     """
     logging.info("BERT pipeline has started.")
 
+    num_epochs = 3
+    batch_size = 32
+
     sentiment_df = loader.initiate_sentiment_data_ingestion()
     sentiment_df_model = prepare_text_df(sentiment_df)
 
@@ -195,17 +194,26 @@ def run_bert_pipeline(loader: DataIngestion, excel_path: str) -> None:
         target_col="label",
         max_len=128,
     )
-    train_loader, val_loader, test_loader, tokenizer = (
-        text_preprocessor.create_datasets(batch_size=16)
+    train_loader, val_loader, test_loader = text_preprocessor.create_datasets(
+        batch_size=batch_size
     )
 
     bert_model = BertModel(num_labels=3)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    bert_model = bert_model.to(device)
+    bert_model = bert_model.to(device=device)
 
     optimizer = torch.optim.AdamW(bert_model.parameters(), lr=2e-5)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
+
+    num_training_steps = len(train_loader) * num_epochs
+    num_warmup_steps = int(0.1 * num_training_steps)
+
+    scheduler = get_linear_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=num_warmup_steps,
+        num_training_steps=num_training_steps,
+    )
+
     criterion = torch.nn.CrossEntropyLoss()
 
     bert_trainer = BertTrainer(model=bert_model, device=device)
@@ -215,7 +223,7 @@ def run_bert_pipeline(loader: DataIngestion, excel_path: str) -> None:
         optimizer=optimizer,
         scheduler=scheduler,
         criterion=criterion,
-        num_epochs=3,
+        num_epochs=num_epochs,
     )
 
     evaluator = ModelEvaluator(

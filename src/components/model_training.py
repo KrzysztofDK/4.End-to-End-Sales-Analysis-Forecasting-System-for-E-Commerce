@@ -243,6 +243,7 @@ class BertTrainer:
             for epoch in range(num_epochs):
                 self.model.train()
                 total_loss = 0
+                scaler = torch.amp.GradScaler("cuda")
                 for batch in train_loader:
                     optimizer.zero_grad()
                     input_ids, attention_mask, labels = (
@@ -250,12 +251,14 @@ class BertTrainer:
                         batch["attention_mask"].to(self.device),
                         batch["labels"].to(self.device),
                     )
-                    outputs = self.model(
-                        input_ids=input_ids, attention_mask=attention_mask
-                    )
-                    loss = criterion(outputs.logits, labels)
-                    loss.backward()
-                    optimizer.step()
+                    with torch.cuda.amp.autocast():
+                        outputs = self.model(
+                            input_ids=input_ids, attention_mask=attention_mask
+                        )
+                        loss = criterion(outputs.logits, labels)
+                    scaler.scale(loss).backward()
+                    scaler.step(optimizer)
+                    scaler.update()
                     scheduler.step()
                     total_loss += loss.item()
 
