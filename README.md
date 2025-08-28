@@ -1,5 +1,5 @@
 # 📊 4.End-to-End Sales Analysis & Forecasting System for E-Commerce
-Stack: Python, Pandas, SQL, ML, ANN/LSTM, Power BI, Streamlit, GitHub, Docker.
+Stack: Python, Pandas, Git, MySQL, Power BI, ANN Keras, Prophet, BERTimbau, Streamlit.
 
 ## 🧠 About the Project
 The project's goal is to create sales analysis and forecasting system for an e-commerce platform that allows for the analysis of customer classification, review sentiment analysis and forecasting sales trends. The program provides a user interface for prediction in streamlit app.
