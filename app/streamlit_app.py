@@ -28,6 +28,7 @@ BERT_FILE = os.path.join("models", "sentiment_bert_model.pt")
 if not os.path.exists(BERT_FILE):
     gdown.download(BERT_URL, BERT_FILE, quiet=False)
 
+
 @st.cache_resource
 def load_ann():
     return load_model(ANN_PATH)
@@ -339,7 +340,13 @@ elif model_choice == "BERTimbau (sentiment analysis)":
                 )
                 probs = torch.softmax(outputs.logits, dim=1).cpu().numpy()[0]
                 labels = ["negative", "neutral", "positive"]
-                result = {labels[i]: float(probs[i]) for i in range(len(labels))}
+
+                # Zamiana wyników na procenty
+                result = {
+                    labels[i]: round(float(probs[i]) * 100, 2)
+                    for i in range(len(labels))
+                }
+
             st.json(result)
         except Exception as e:
             st.error(f"Error: {e}")
